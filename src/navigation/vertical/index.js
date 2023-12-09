@@ -1,29 +1,60 @@
-import { Mail, Home, Airplay, Circle } from "react-feather";
+import {
+  Mail,
+  Home,
+  Airplay,
+  Circle,
+  Book,
+  Layers,
+  BookOpen,
+  MessageCircle,
+} from "react-feather";
 
 export default [
   {
     id: "home",
-    title: "Home",
+    title: "خانه",
     icon: <Home size={20} />,
     navLink: "/home",
   },
   {
-    id: "secondPage",
-    title: "Second Page",
-    icon: <Mail size={20} />,
-    navLink: "/second-page",
-  },
-  {
-    id: "smaplePage",
-    title: "Sample Page",
-    icon: <Airplay size={20} />,
-    // navLink: "/sample",
+    id: "courses",
+    title: "دوره‌ها",
+    icon: <Book size={20} />,
+    badge: "light-warning",
+    badgeText: "2",
     children: [
       {
-        id: "invoiceList",
-        title: "List",
-        icon: <Circle size={12} />,
-        navLink: "/apps/invoice/list",
+        id: "courseManagement",
+        title: "مدیریت دوره‌ها",
+        icon: <BookOpen size={20} />,
+        navLink: "/course-management",
+      },
+      {
+        id: "courseComments",
+        title: "مدیریت کامنت‌ها",
+        icon: <MessageCircle size={20} />,
+        navLink: "/course-comments-management",
+      },
+    ],
+  },
+  {
+    id: "news",
+    title: "بلاگ‌ها",
+    icon: <Book size={20} />,
+    badge: "light-warning",
+    badgeText: "2",
+    children: [
+      {
+        id: "courseManagement",
+        title: "مدیریت بلاگ‌ها",
+        icon: <BookOpen size={20} />,
+        navLink: "/course-management",
+      },
+      {
+        id: "courseComments",
+        title: "مدیریت کامنت‌ها",
+        icon: <MessageCircle size={20} />,
+        navLink: "/course-comments-management",
       },
     ],
   },

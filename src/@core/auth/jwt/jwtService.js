@@ -17,6 +17,7 @@ export default class JwtService {
     // ** Request Interceptor
     axios.interceptors.request.use(
       (config) => {
+        config.baseURL = import.meta.env.VITE_API_BASE_URL;
         // ** Get token from localStorage
         const accessToken = this.getToken();
 
@@ -106,5 +107,17 @@ export default class JwtService {
     return axios.post(this.jwtConfig.refreshEndpoint, {
       refreshToken: this.getRefreshToken(),
     });
+  }
+  getAllCourses(params) {
+    return axios("/Course/CourseList", { params });
+  }
+  getAllTeachers() {
+    return axios("/Home/GetTeachers");
+  }
+  getAllUsers(params) {
+    return axios("/User/UserMannage", { params });
+  }
+  getAllNews(params) {
+    return axios("/News", { params });
   }
 }
