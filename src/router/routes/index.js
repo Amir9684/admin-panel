@@ -32,6 +32,7 @@ const Register = lazy(() => import("../../pages/Register"));
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"));
 const Error = lazy(() => import("../../pages/Error"));
 const Sample = lazy(() => import("../../pages/Sample"));
+const ResetPassword = lazy(() => import("../../pages/ResetPassword"));
 
 // ** Merge Routes
 const Routes = [
@@ -69,6 +70,13 @@ const Routes = [
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+    meta: {
+      layout: "blank",
+    },
+  },
+  {
+    path: "/reset-password/:id",
+    element: <ResetPassword />,
     meta: {
       layout: "blank",
     },

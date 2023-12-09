@@ -1,28 +1,20 @@
 // ** React Imports
+import { Link, useNavigate, useParams } from "react-router-dom";
+
+// ** Custom Hooks
 import { useSkin } from "@hooks/useSkin";
-import { Link, useNavigate } from "react-router-dom";
 
 // ** Icons Imports
-import { Facebook, Twitter, Mail, GitHub } from "react-feather";
-
-// ** Custom Components
-import InputPasswordToggle from "@components/input-password-toggle";
+import { ChevronLeft } from "react-feather";
 
 // ** Reactstrap Imports
-import {
-  Row,
-  Col,
-  CardTitle,
-  CardText,
-  Form,
-  Label,
-  Input,
-  Button,
-} from "reactstrap";
+import { Row, Col, CardTitle, CardText, Form, Label, Button } from "reactstrap";
+
+import InputPasswordToggle from "@components/input-password-toggle";
 
 // ** Illustrations Imports
-import illustrationsLight from "@src/assets/images/pages/login-v2.svg";
-import illustrationsDark from "@src/assets/images/pages/login-v2-dark.svg";
+import illustrationsLight from "@src/assets/images/pages/forgot-password-v2.svg";
+import illustrationsDark from "@src/assets/images/pages/forgot-password-v2-dark.svg";
 
 // ** Styles
 import "@styles/react/pages/page-authentication.scss";
@@ -30,24 +22,33 @@ import "@styles/react/pages/page-authentication.scss";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginAPI } from "../services/api/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import {
+  resetConfirmValue,
+  resetPasswordAPI,
+} from "../services/api/auth";
 
 import style from "../style/auth.module.css";
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .email({ message: "ایمیل نامعتبر" })
-    .min(1, { message: "ایمیل خود را وارد کنید" }),
-  password: z
-    .string()
-    .min(4, { message: "رمز عبور حداقل 4 کاراکتر دارد" })
-    .max(15, { message: "رمز عبور حداکثر 15 کاراکتر دارد" }),
-});
+const formSchema = z
+  .object({
+    password: z
+      .string()
+      .min(4, { message: "رمز عبور حداقل 4 کاراکتر دارد" })
+      .max(15, { message: "رمز عبور حداکثر 15 کاراکتر دارد" }),
+    confirmPassword: z
+      .string()
+      .min(4, { message: "رمز عبور حداقل 4 کاراکتر دارد" })
+      .max(15, { message: "رمز عبور حداکثر 15 کاراکتر دارد" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "باید با رمز عبور یکسان باشد",
+    path: ["confirmPassword"],
+  });
 
-const Login = () => {
+const ResetPassword = () => {
+  // ** Hooks
   const { skin } = useSkin();
 
   const source = skin === "dark" ? illustrationsDark : illustrationsLight;
@@ -59,37 +60,45 @@ const Login = () => {
   } = useForm({
     resolver: zodResolver(formSchema),
   });
-  const { ref: emailRef, ...registerEmail } = register("email");
   const { ref: passwordRef, ...registerPassword } = register("password");
+  const { ref: confirmPasswordRef , ...registerConfirmPassword } = register("confirmPassword");
 
-  const [isCheck, setIsCheck] = useState(false);
-  const handleCheckBox = () => {
-    setIsCheck(!isCheck);
+  const { id } = useParams();
+
+  const [apiData, setApiData] = useState({});
+
+  const confirmValue = async () => {
+    await resetConfirmValue(id).then((res) => {
+      setApiData({
+        userId: res.id,
+        resetValue: res.message,
+      });
+      console.log(res);
+    });
   };
+  useEffect(() => {
+    confirmValue();
+  }, []);
 
   const navigate = useNavigate();
 
   const onSubmit = async (values) => {
     const obj = {
-      phoneOrGmail: values.email,
-      password: values.password,
-      rememberMe: isCheck,
+      userId: apiData.userId,
+      newPassword: values.password,
+      resetValue: apiData.resetValue,
     };
-    const loginApi = await loginAPI(obj);
-    console.log(loginApi);
 
-    if (loginApi.roles.includes("Administrator") === true) {
-      toast.success("با موفقیت وارد شدید");
+    const resetPassApi = await  resetPasswordAPI(obj);
+    console.log(resetPassApi , values);
+
+    if (resetPassApi.success === true) {
+      toast.success(resetPassApi.message);
       setTimeout(() => {
-        navigate("/");
-      }, 500);
-    } else if (loginApi.roles.includes("Teacher") === true) {
-      toast.success("با موفقیت وارد شدید");
-      setTimeout(() => {
-        navigate("/");
-      }, 700);
+        navigate("/login")
+      } , 700)
     } else {
-      toast.error("مجوز ورود ندارید");
+        toast.error("مشکلی پیش آمده، دوباره امتحان کنید")
     }
   };
 
@@ -181,84 +190,60 @@ const Login = () => {
               className="fw-bold mb-1"
               style={{ direction: "rtl" }}
             >
-              به پندینگ کدینگ خوش آمدید 👋
+              بازنشانی رمز عبور🔒
             </CardTitle>
             <CardText className="mb-2" style={{ direction: "rtl" }}>
-              لطفا وارد حساب کاربری خود شوید
+              رمز عبور جدید خود را وارد کنید، رمز عبور باید شامل حروف بزرگ و
+              کوچیک و اعداد باشد
             </CardText>
 
             <Form
-              // style={{border: "1px solid red"}}
-              className="auth-login-form mt-2"
+              className="auth-forgot-password-form mt-2"
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="mb-1">
-                <Label className="form-label" for="login-email">
-                  پست الکترونیکی
+                <Label className="form-label" for="password">
+                  رمز عبور
                 </Label>
-                <Input
-                  name="email"
-                  type="email"
-                  id="login-email"
-                  placeholder="PendingCoding@gmail.com"
-                  autoFocus
-                  innerRef={emailRef}
-                  {...registerEmail}
-                  style={
-                    errors.email && { border: "1px solid rgb(255, 50, 50)" }
-                  }
-                />
-                <div className={style.error}> {errors.email?.message} </div>
-              </div>
-
-              <div className="mb-1">
-                <div className="d-flex justify-content-between">
-                  <Label className="form-label" for="login-password">
-                    رمز عبور
-                  </Label>
-                  <Link to="/forgot-password">
-                    <small>رمز عبور خود را فراموش کردید ؟</small>
-                  </Link>
-                </div>
                 <InputPasswordToggle
                   className="input-group-merge"
-                  id="login-password"
+                  id="password"
                   innerRef={passwordRef}
                   {...registerPassword}
                   style={
-                    errors.email && { border: "1px solid rgb(255, 50, 50)" }
+                    errors.password && { border: "1px solid rgb(255, 50, 50)" }
                   }
                 />
                 <div className={style.error}> {errors.password?.message} </div>
               </div>
-              <div className="form-check mb-1">
-                <Input
-                  type="checkbox"
-                  id="remember-me"
-                  checked={isCheck}
-                  onChange={handleCheckBox}
-                />
-                <Label className="form-check-label" for="remember-me">
-                  مرا به خاطر بسپار
+
+              <div className="mb-1">
+                <Label className="form-label" for="confirmPassword">
+                  رمز عبور
                 </Label>
+                <InputPasswordToggle
+                  className="input-group-merge"
+                  id="confirmPassword"
+                  innerRef={confirmPasswordRef}
+                  {...registerConfirmPassword}
+                  style={
+                    errors.confirmPassword && { border: "1px solid rgb(255, 50, 50)" }
+                  }
+                />
+                <div className={style.error}> {errors.confirmPassword?.message} </div>
               </div>
+
               <Button color="primary" block type="submit">
-                ورود
+                ثبت اطلاعات
               </Button>
             </Form>
 
-            {/* <p className="text-center mt-2">
-              <span className="me-25">حساب کاربری ندارید ؟ </span>
-              <Link to="/register">
-                <span>یک حساب ایجاد کنید </span>
+            <p className="text-center mt-2">
+              <Link to="/login">
+                <ChevronLeft className="rotate-rtl me-25" size={14} />
+                <span className="align-middle">بازگشت به صفحه ورود</span>
               </Link>
-            </p> */}
-
-            <div className="divider my-2">
-              <div className="divider-text" style={{ marginTop: "3px" }}>
-                PendingCoding
-              </div>
-            </div>
+            </p>
           </Col>
         </Col>
       </Row>
@@ -266,4 +251,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;
