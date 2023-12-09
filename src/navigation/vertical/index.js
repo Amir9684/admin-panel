@@ -45,16 +45,16 @@ export default [
     badgeText: "2",
     children: [
       {
-        id: "courseManagement",
+        id: "newsManagement",
         title: "مدیریت بلاگ‌ها",
         icon: <BookOpen size={20} />,
-        navLink: "/course-management",
+        navLink: "/news-management",
       },
       {
-        id: "courseComments",
+        id: "newsComments",
         title: "مدیریت کامنت‌ها",
         icon: <MessageCircle size={20} />,
-        navLink: "/course-comments-management",
+        navLink: "/news-comments-management",
       },
     ],
   },

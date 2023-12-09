@@ -26,6 +26,16 @@ export const getTopCourses = createAsyncThunk(
   }
 );
 
+export const deleteCourse = createAsyncThunk(
+  "course/delete",
+  async (courseId, isActive) => {
+    const body = { active: isActive, id: courseId };
+    return apiCall
+      .delete("/Course/DeleteCourse", body)
+      .then((res) => ({ ...res, courseId }));
+  }
+);
+
 export const courseSlice = createSlice({
   name: "courses",
   initialState,
@@ -52,6 +62,16 @@ export const courseSlice = createSlice({
         state.totalCount = action.payload.length;
       })
       .addCase(getTopCourses.rejected, (state, payload) => {
+        state.status = "error";
+      })
+      .addCase(deleteCourse.fulfilled, (state, action) => {
+        const newArray = state.courses.filter(
+          (c) => c.courseId !== action.payload.courseId
+        );
+        state.courses = newArray;
+        state.totalCount = action.payload.length;
+      })
+      .addCase(deleteCourse.rejected, (state, payload) => {
         state.status = "error";
       });
   },
