@@ -35,6 +35,11 @@ import { forgetPasswordAPI } from "../services/api/auth";
 
 import style from "../style/auth.module.css";
 
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
+
 const formSchema = z.object({
   email: z
     .string()
@@ -56,6 +61,30 @@ const ForgotPassword = () => {
     resolver: zodResolver(formSchema),
   });
   const { ref: emailRef, ...registerEmail } = register("email");
+  
+  const handleSuccess = () => {
+    return MySwal.fire({
+      title: "! با موفقیت ارسال شد",
+      text: ' لطفا ایمیل های خود را چک کنید و درخواست خود را تایید کنید',
+      icon: 'success',
+      customClass: {
+        confirmButton: 'btn btn-primary'
+      },
+      buttonsStyling: false
+    })
+  }
+
+  const handleError = (text) => {
+    return MySwal.fire({
+      title: '! عملیات نا موفق',
+      text: text,
+      icon: 'error',
+      customClass: {
+        confirmButton: 'btn btn-primary'
+      },
+      buttonsStyling: false
+    })
+  }
 
   const onSubmit = async (values) => {
     const obj = {
@@ -66,10 +95,10 @@ const ForgotPassword = () => {
     console.log(forgetPassApi);
 
     if(forgetPassApi.success === false){
-      toast.error(forgetPassApi.errors)
+      handleError(forgetPassApi.errors)
     }
     else {
-      toast.success("با موفقیت ارسال شد")
+      handleSuccess()
     }
   };
 

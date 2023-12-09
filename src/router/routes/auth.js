@@ -8,6 +8,9 @@ const AuthRoutes = [
   {
     path: "/login",
     element: <Login />,
+    meta: {
+      layout: 'blank'
+    }
   },
   {
     path: "/register",
@@ -16,6 +19,9 @@ const AuthRoutes = [
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+    meta: {
+      layout: 'blank'
+    }
   },
 ];
 

@@ -21,8 +21,8 @@ import {
 } from "reactstrap";
 
 // ** Illustrations Imports
-import illustrationsLight from "@src/assets/images/pages/login-v2.svg";
-import illustrationsDark from "@src/assets/images/pages/login-v2-dark.svg";
+import illustrationsLight from "@src/assets/images/pages/verify-email-illustration.svg";
+import illustrationsDark from "@src/assets/images/pages/verify-email-illustration-dark.svg";
 
 // ** Styles
 import "@styles/react/pages/page-authentication.scss";
