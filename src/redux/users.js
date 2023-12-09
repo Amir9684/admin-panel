@@ -25,7 +25,7 @@ export const userSlice = createSlice({
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.status = "success";
-        state.teachers = action.payload.listUser;
+        state.users = action.payload.listUser;
         state.totalCount = action.payload.totalCount;
         state.roles = action.payload.roles;
       })

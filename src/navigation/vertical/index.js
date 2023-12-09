@@ -5,6 +5,7 @@ import {
   Circle,
   Book,
   Layers,
+  User,
   BookOpen,
   MessageCircle,
 } from "react-feather";
@@ -15,6 +16,12 @@ export default [
     title: "خانه",
     icon: <Home size={20} />,
     navLink: "/home",
+  },
+  {
+    id: "userManagement",
+    title: "مدیریت کاربران",
+    icon: <User size={20} />,
+    navLink: "/user-management",
   },
   {
     id: "courses",
