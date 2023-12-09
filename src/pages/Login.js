@@ -78,12 +78,19 @@ const Login = () => {
     const loginApi = await loginAPI(obj);
     console.log(loginApi);
 
-    // if (loginApi.roles.map((values) => )){}
+    if (loginApi.roles.includes("Administrator") === true) {
       toast.success("با موفقیت وارد شدید");
       setTimeout(() => {
         navigate("/");
       }, 500);
-      
+    } else if (loginApi.roles.includes("Teacher") === true) {
+      toast.success("با موفقیت وارد شدید");
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
+    } else {
+      toast.error("مجوز ورود ندارید");
+    }
   };
 
   return (
