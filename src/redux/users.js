@@ -27,7 +27,7 @@ export const userSlice = createSlice({
         state.status = "success";
         state.teachers = action.payload.listUser;
         state.totalCount = action.payload.totalCount;
-        state.totalCount = action.payload.roles;
+        state.roles = action.payload.roles;
       })
       .addCase(getAllUsers.rejected, (state) => {
         state.status = "error";

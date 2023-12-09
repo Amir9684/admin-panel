@@ -59,7 +59,7 @@ const renderClient = (row) => {
     ],
     color = states[stateNum];
 
-  if (row.avatar.length) {
+  if (row.tumbImageAddress?.length) {
     return <Avatar className="me-50" img={row.avatar} width="32" height="32" />;
   } else {
     return (

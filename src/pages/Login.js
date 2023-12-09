@@ -35,6 +35,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import style from "../style/auth.module.css";
+import { setItem } from "../services/common/storage.services";
 
 const formSchema = z.object({
   email: z
@@ -76,10 +77,11 @@ const Login = () => {
       rememberMe: isCheck,
     };
     const loginApi = await loginAPI(obj);
-    console.log(loginApi);
 
     if (loginApi.roles.includes("Administrator") === true) {
       toast.success("با موفقیت وارد شدید");
+      setItem("user", obj);
+      setItem("token", loginApi.token);
       setTimeout(() => {
         navigate("/");
       }, 500);

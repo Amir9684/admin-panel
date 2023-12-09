@@ -89,6 +89,11 @@ const CustomHeader = ({
     </div>
   );
 };
+const result = (str) => {
+  const firstChar = str.charAt(0).toUpperCase();
+  const remainingChars = str.slice(1);
+  return `${firstChar}${remainingChars}`;
+};
 
 const InvoiceList = () => {
   // ** Store vars
@@ -105,11 +110,11 @@ const InvoiceList = () => {
 
   useEffect(() => {
     const params = {
-      sort,
+      sort: sort.toUpperCase(),
       q: value,
-      sortColumn,
-      page: currentPage,
-      perPage: rowsPerPage,
+      sortColumn: result(sortColumn),
+      PageNumber: currentPage,
+      RowsOfPage: rowsPerPage,
       status: statusValue,
     };
     dispatch(getAllCourses(params));
@@ -118,11 +123,11 @@ const InvoiceList = () => {
   const handleFilter = (val) => {
     setValue(val);
     const params = {
-      sort,
-      q: val,
-      sortColumn,
-      page: currentPage,
-      perPage: rowsPerPage,
+      sort: sort.toUpperCase(),
+      q: value,
+      sortColumn: result(sortColumn),
+      PageNumber: currentPage,
+      RowsOfPage: rowsPerPage,
       status: statusValue,
     };
     dispatch(getAllCourses(params));
@@ -130,12 +135,12 @@ const InvoiceList = () => {
 
   const handlePerPage = (e) => {
     const params = {
-      sort,
+      sort: sort.toUpperCase(),
       q: value,
-      sortColumn,
-      page: currentPage,
+      sortColumn: result(sortColumn),
+      PageNumber: currentPage,
+      RowsOfPage: parseInt(e.target.value),
       status: statusValue,
-      perPage: parseInt(e.target.value),
     };
     dispatch(getAllCourses(params));
     setRowsPerPage(parseInt(e.target.value));
@@ -144,11 +149,11 @@ const InvoiceList = () => {
   const handleStatusValue = (e) => {
     setStatusValue(e.target.value);
     const params = {
-      sort,
+      sort: sort.toUpperCase(),
       q: value,
-      sortColumn,
-      page: currentPage,
-      perPage: rowsPerPage,
+      sortColumn: result(sortColumn),
+      PageNumber: currentPage,
+      RowsOfPage: rowsPerPage,
       status: e.target.value,
     };
     dispatch(getAllCourses(params));
@@ -156,12 +161,12 @@ const InvoiceList = () => {
 
   const handlePagination = (page) => {
     const params = {
-      sort,
+      sort: sort.toUpperCase(),
       q: value,
-      sortColumn,
+      sortColumn: result(sortColumn),
+      PageNumber: page.selected + 1,
+      RowsOfPage: rowsPerPage,
       status: statusValue,
-      perPage: rowsPerPage,
-      page: page.selected + 1,
     };
     dispatch(getAllCourses(params));
     setCurrentPage(page.selected + 1);

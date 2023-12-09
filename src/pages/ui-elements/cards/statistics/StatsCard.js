@@ -40,6 +40,8 @@ const StatsCard = ({ cols }) => {
     dispatch(getAllTeachers());
   }, []);
 
+  console.log(user)
+
   const data = [
     {
       title: getPersianNumbers(teachers.teachers?.length, false),
@@ -48,7 +50,7 @@ const StatsCard = ({ cols }) => {
       icon: <Users size={24} />,
     },
     {
-      title: getPersianNumbers(user.totalCount, false),
+      title: getPersianNumbers(user?.totalCount, false),
       subtitle: "کاربران مجموعه",
       color: "light-success",
       icon: <UserCheck size={24} />,
