@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 
-import { apiCall } from "../@core/auth/jwt/services/interceptor/api-call";
+import { apiCall } from "../services/interceptor/api-call";
 
 const initialState = {
   status: "idle",

@@ -15,7 +15,6 @@ import { getPersianNumbers } from "../../../../utility/get-persian-numbers";
 const CardTransactions = () => {
   const dispatch = useDispatch();
   const courses = useCourses();
-  console.log(courses);
   useEffect(() => {
     dispatch(getTopCourses(4));
   }, []);
@@ -61,7 +60,7 @@ const CardTransactions = () => {
   // ];
 
   const renderTransactions = () => {
-    return courses.courses.map((item) => {
+    return courses.courses.slice(0, 4).map((item) => {
       return (
         <div key={item.courseId} className="transaction-item">
           <div className="d-flex">

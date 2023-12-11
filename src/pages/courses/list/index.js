@@ -110,37 +110,39 @@ const InvoiceList = () => {
 
   useEffect(() => {
     const params = {
-      sort: sort.toUpperCase(),
-      q: value,
-      sortColumn: result(sortColumn),
+      SortType: sort.toUpperCase(),
+      Query: value,
+      SortingCol: result(sortColumn),
       PageNumber: currentPage,
       RowsOfPage: rowsPerPage,
-      status: statusValue,
+      StatusName: statusValue,
     };
     dispatch(getAllCourses(params));
   }, [dispatch, courses.totalCount]);
 
   const handleFilter = (val) => {
     setValue(val);
-    const params = {
-      sort: sort.toUpperCase(),
-      q: value,
-      sortColumn: result(sortColumn),
-      PageNumber: currentPage,
-      RowsOfPage: rowsPerPage,
-      status: statusValue,
-    };
-    dispatch(getAllCourses(params));
+    setTimeout(() => {
+      const params = {
+        SortType: sort.toUpperCase(),
+        Query: value,
+        SortingCol: result(sortColumn),
+        PageNumber: currentPage,
+        RowsOfPage: rowsPerPage,
+        StatusName: statusValue,
+      };
+      dispatch(getAllCourses(params));
+    }, 1000);
   };
 
   const handlePerPage = (e) => {
     const params = {
-      sort: sort.toUpperCase(),
-      q: value,
-      sortColumn: result(sortColumn),
+      SortType: sort.toUpperCase(),
+      Query: value,
+      SortingCol: result(sortColumn),
       PageNumber: currentPage,
       RowsOfPage: parseInt(e.target.value),
-      status: statusValue,
+      StatusName: statusValue,
     };
     dispatch(getAllCourses(params));
     setRowsPerPage(parseInt(e.target.value));
@@ -149,24 +151,25 @@ const InvoiceList = () => {
   const handleStatusValue = (e) => {
     setStatusValue(e.target.value);
     const params = {
-      sort: sort.toUpperCase(),
-      q: value,
-      sortColumn: result(sortColumn),
+      SortType: sort.toUpperCase(),
+      Query: value,
+      SortingCol: result(sortColumn),
       PageNumber: currentPage,
       RowsOfPage: rowsPerPage,
-      status: e.target.value,
+      StatusName: e.target.value,
     };
+    console.log(params);
     dispatch(getAllCourses(params));
   };
 
   const handlePagination = (page) => {
     const params = {
-      sort: sort.toUpperCase(),
-      q: value,
-      sortColumn: result(sortColumn),
+      SortType: sort.toUpperCase(),
+      Query: value,
+      SortingCol: result(sortColumn),
       PageNumber: page.selected + 1,
       RowsOfPage: rowsPerPage,
-      status: statusValue,
+      StatusName: statusValue,
     };
     dispatch(getAllCourses(params));
     setCurrentPage(page.selected + 1);
@@ -199,8 +202,8 @@ const InvoiceList = () => {
 
   const dataToRender = () => {
     const filters = {
-      q: value,
-      status: statusValue,
+      Query: value,
+      StatusName: statusValue,
     };
 
     const isFiltered = Object.keys(filters).some(function (k) {
@@ -219,14 +222,13 @@ const InvoiceList = () => {
   const handleSort = (column, sortDirection) => {
     setSort(sortDirection);
     setSortColumn(column.sortField);
-
     const params = {
-      q: value,
-      page: currentPage,
-      sort: sortDirection,
-      status: statusValue,
-      perPage: rowsPerPage,
-      sortColumn: column.sortField,
+      SortType: sort.toUpperCase(),
+      Query: value,
+      PageNumber: currentPage,
+      RowsOfPage: rowsPerPage,
+      StatusName: statusValue,
+      SortingCol: result(column.sortField),
     };
     dispatch(getAllCourses(params));
   };

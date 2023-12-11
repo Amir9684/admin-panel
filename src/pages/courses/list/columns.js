@@ -35,6 +35,7 @@ import {
   MoreVertical,
   ArrowDownCircle,
 } from "react-feather";
+import { getPersianNumbers } from "../../../utility/get-persian-numbers";
 
 // ** Vars
 const invoiceStatusObj = {
@@ -82,74 +83,70 @@ export const columns = [
     minWidth: "107px",
     // selector: row => row.id,
     cell: (row) => (
-      <Link to={`/apps/invoice/preview/${row.id}`}>{`#${row.id}`}</Link>
+      <Link
+        to={`/course-managment/preview/${row.courseId}`}
+      >{`#${row.courseId.substr(0, 10)}`}</Link>
     ),
   },
   {
-    sortable: true,
-    minWidth: "102px",
-    sortField: "invoiceStatus",
-    name: <TrendingUp size={14} />,
-    // selector: row => row.invoiceStatus,
-    cell: (row) => {
-      const color = invoiceStatusObj[row.invoiceStatus]
-          ? invoiceStatusObj[row.invoiceStatus].color
-          : "primary",
-        Icon = invoiceStatusObj[row.invoiceStatus]
-          ? invoiceStatusObj[row.invoiceStatus].icon
-          : Edit;
-      return (
-        <Fragment>
-          <Avatar
-            color={color}
-            icon={<Icon size={14} />}
-            id={`av-tooltip-${row.id}`}
-          />
-          <UncontrolledTooltip placement="top" target={`av-tooltip-${row.id}`}>
-            <span className="fw-bold">{row.invoiceStatus}</span>
-            <br />
-            <span className="fw-bold">Balance:</span> {row.balance}
-            <br />
-            <span className="fw-bold">Due Date:</span> {row.dueDate}
-          </UncontrolledTooltip>
-        </Fragment>
-      );
-    },
-  },
-  {
-    name: "Client",
+    name: "عنوان دوره",
     sortable: true,
     minWidth: "350px",
-    sortField: "client.name",
+    sortField: "title",
     // selector: row => row.client.name,
     cell: (row) => {
-      const name = row.client ? row.client.name : "John Doe",
-        email = row.client ? row.client.companyEmail : "johnDoe@email.com";
       return (
         <div className="d-flex justify-content-left align-items-center">
           {renderClient(row)}
           <div className="d-flex flex-column">
-            <h6 className="user-name text-truncate mb-0">{name}</h6>
-            <small className="text-truncate text-muted mb-0">{email}</small>
+            <h6 className="user-name text-truncate mb-0">{row.title}</h6>
+            <small className="text-truncate text-muted mb-0">
+              {row.statusName}
+            </small>
           </div>
         </div>
       );
     },
   },
   {
-    name: "Total",
+    name: "قیمت",
     sortable: true,
     minWidth: "150px",
-    sortField: "total",
+    sortField: "cost",
     // selector: row => row.total,
-    cell: (row) => <span>${row.total || 0}</span>,
+    cell: (row) => <span>{row.cost || 0} ريال</span>,
   },
   {
     sortable: true,
     minWidth: "200px",
-    name: "Issued Date",
-    sortField: "dueDate",
-    cell: (row) => row.dueDate,
+    name: "آخرین بروزرسانی",
+    sortField: "lastUpdate",
+    cell: (row) => {
+      const lastUpdate = new Date(row?.lastUpdate)
+        .toLocaleDateString("fa-IR-u-nu-latn")
+        .split("/");
+      const months = [
+        "فروردين",
+        "ارديبهشت",
+        "خرداد",
+        "تير",
+        "مرداد",
+        "شهريور",
+        "مهر",
+        "آبان",
+        "آذر",
+        "دي",
+        "بهمن",
+        "اسفند",
+      ];
+      return (
+        <span>
+          {`${getPersianNumbers(lastUpdate?.[2], true)} ${
+            months[lastUpdate?.[1] - 1]
+          } ${getPersianNumbers(lastUpdate?.[0], true)}`}
+        </span>
+      );
+    },
     // selector: row => row.dueDate
   },
   {

@@ -22,47 +22,29 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
 const StatsCard = ({ cols }) => {
-  const dispatch = useDispatch();
-
-  const user = useUsers();
-  const courses = useCourses();
-  const news = useNews();
-  const teachers = useTeachers();
-
-  useEffect(() => {
-    dispatch(getAllCourses());
-    dispatch(getAllUsers());
-    dispatch(getAllNews());
-    dispatch(getAllTeachers());
-  }, []);
-
-  console.log(user)
-
   const data = [
     {
-      title: getPersianNumbers(teachers.teachers?.length, false),
+      title: "getPersianNumbers(teachers.teachers?.length, false)",
       subtitle: "اساتید محموعه",
       color: "light-info",
       icon: <Users size={24} />,
     },
     {
-      title: getPersianNumbers(user?.totalCount, false),
+      title: "getPersianNumbers(user?.totalCount, false)",
       subtitle: "کاربران مجموعه",
       color: "light-success",
       icon: <UserCheck size={24} />,
     },
     {
-      title: getPersianNumbers(courses.totalCount, false),
+      title: "getPersianNumbers(courses.totalCount, false)",
       subtitle: "دوره‌ها",
       color: "light-primary",
       icon: <BookOpen size={24} />,
     },
     {
-      title: getPersianNumbers(news.totalCount, false),
+      title: "getPersianNumbers(news.totalCount, false)",
       subtitle: "اخبار",
       color: "light-danger",
       icon: <FileText size={24} />,
