@@ -11,6 +11,8 @@ import themeConfig from "@configs/themeConfig";
 // ** Utils
 import { getUserData, getHomeRouteForLoggedInUser } from "@utils";
 
+// import LogoRotate from "../../../../../assets/images/PC-logo/logo";
+
 const VerticalMenuHeader = (props) => {
   // ** Props
   const {
@@ -60,10 +62,11 @@ const VerticalMenuHeader = (props) => {
             to={user ? getHomeRouteForLoggedInUser(user.role) : "/"}
             className="navbar-brand"
           >
-            <span className="brand-logo">
-              <img src={themeConfig.app.appLogoImage} alt="logo" />
+            <span>
+              {/* <img src={themeConfig.app.appLogoImage} alt="logo" /> */}
+              {/* <LogoRotate /> */}
             </span>
-            <h2 className="brand-text mb-0">{themeConfig.app.appName}</h2>
+            <h2 className="brand-text mb-1">PendingCoding</h2>
           </NavLink>
         </li>
         <li className="nav-item nav-toggle">

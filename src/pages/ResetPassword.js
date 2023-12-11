@@ -24,12 +24,10 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  resetConfirmValue,
-  resetPasswordAPI,
-} from "../services/api/auth";
+import { resetConfirmValue, resetPasswordAPI } from "../services/api/auth";
 
 import style from "../style/auth.module.css";
+import LogoRotate from "../assets/images/PC-logo/logo";
 
 const formSchema = z
   .object({
@@ -61,7 +59,8 @@ const ResetPassword = () => {
     resolver: zodResolver(formSchema),
   });
   const { ref: passwordRef, ...registerPassword } = register("password");
-  const { ref: confirmPasswordRef , ...registerConfirmPassword } = register("confirmPassword");
+  const { ref: confirmPasswordRef, ...registerConfirmPassword } =
+    register("confirmPassword");
 
   const { id } = useParams();
 
@@ -89,16 +88,16 @@ const ResetPassword = () => {
       resetValue: apiData.resetValue,
     };
 
-    const resetPassApi = await  resetPasswordAPI(obj);
-    console.log(resetPassApi , values);
+    const resetPassApi = await resetPasswordAPI(obj);
+    console.log(resetPassApi, values);
 
     if (resetPassApi.success === true) {
       toast.success(resetPassApi.message);
       setTimeout(() => {
-        navigate("/login")
-      } , 700)
+        navigate("/login");
+      }, 700);
     } else {
-        toast.error("مشکلی پیش آمده، دوباره امتحان کنید")
+      toast.error("مشکلی پیش آمده، دوباره امتحان کنید");
     }
   };
 
@@ -106,7 +105,7 @@ const ResetPassword = () => {
     <div className="auth-wrapper auth-cover">
       <Row className="auth-inner m-0">
         <Link className="brand-logo" to="/" onClick={(e) => e.preventDefault()}>
-          <svg viewBox="0 0 139 95" version="1.1" height="28">
+          {/* <svg viewBox="0 0 139 95" version="1.1" height="28">
             <defs>
               <linearGradient
                 x1="100%"
@@ -171,7 +170,10 @@ const ResetPassword = () => {
                 </g>
               </g>
             </g>
-          </svg>
+          </svg> */}
+
+          <LogoRotate />
+
           <h2 className="brand-text text-primary ms-1">PendingCoding</h2>
         </Link>
         <Col className="d-none d-lg-flex align-items-center p-5" lg="8" sm="12">
@@ -227,10 +229,15 @@ const ResetPassword = () => {
                   innerRef={confirmPasswordRef}
                   {...registerConfirmPassword}
                   style={
-                    errors.confirmPassword && { border: "1px solid rgb(255, 50, 50)" }
+                    errors.confirmPassword && {
+                      border: "1px solid rgb(255, 50, 50)",
+                    }
                   }
                 />
-                <div className={style.error}> {errors.confirmPassword?.message} </div>
+                <div className={style.error}>
+                  {" "}
+                  {errors.confirmPassword?.message}{" "}
+                </div>
               </div>
 
               <Button color="primary" block type="submit">
