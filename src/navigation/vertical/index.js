@@ -1,30 +1,22 @@
-import { Mail, Home, Airplay, Circle } from "react-feather";
+import { Home, Book, BookOpen, MessageCircle, FileText } from "react-feather";
 
 export default [
   {
     id: "home",
-    title: "Home",
+    title: "خانه",
     icon: <Home size={20} />,
     navLink: "/home",
   },
   {
-    id: "secondPage",
-    title: "Second Page",
-    icon: <Mail size={20} />,
-    navLink: "/second-page",
+    id: "news",
+    title: "بلاگ‌ها",
+    icon: <FileText size={20} />,
+    navLink: "/news",
   },
   {
-    id: "smaplePage",
-    title: "Sample Page",
-    icon: <Airplay size={20} />,
-    // navLink: "/sample",
-    children: [
-      {
-        id: "invoiceList",
-        title: "List",
-        icon: <Circle size={12} />,
-        navLink: "/apps/invoice/list",
-      },
-    ],
+    id: "courses",
+    title: "دوره‌ها",
+    icon: <Book size={20} />,
+    navLink: "/course-management",
   },
 ];

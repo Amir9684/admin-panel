@@ -26,11 +26,52 @@ import illustrationsDark from "@src/assets/images/pages/forgot-password-v2-dark.
 // ** Styles
 import "@styles/react/pages/page-authentication.scss";
 
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { forgetPasswordAPI } from "../services/api/auth";
+
+import style from "../style/auth.module.css";
+
+const formSchema = z.object({
+  email: z
+    .string()
+    .email({ message: "ایمیل نامعتبر" })
+    .min(1, { message: "ایمیل خود را وارد کنید" }),
+});
+
 const ForgotPassword = () => {
   // ** Hooks
   const { skin } = useSkin();
 
   const source = skin === "dark" ? illustrationsDark : illustrationsLight;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+  });
+  const { ref: emailRef, ...registerEmail } = register("email");
+
+  const onSubmit = async (values) => {
+    const obj = {
+      email: values.email,
+      baseUrl: "http://localhost:3000/reset-password",
+    };
+    const forgetPassApi = await forgetPasswordAPI(obj);
+    console.log(forgetPassApi);
+
+    if(forgetPassApi.success === false){
+      toast.error(forgetPassApi.errors)
+    }
+    else {
+      toast.success("با موفقیت ارسال شد")
+    }
+  };
 
   return (
     <div className="auth-wrapper auth-cover">
@@ -102,7 +143,7 @@ const ForgotPassword = () => {
               </g>
             </g>
           </svg>
-          <h2 className="brand-text text-primary ms-1">Vuexy</h2>
+          <h2 className="brand-text text-primary ms-1">PendingCoding</h2>
         </Link>
         <Col className="d-none d-lg-flex align-items-center p-5" lg="8" sm="12">
           <div className="w-100 d-lg-flex align-items-center justify-content-center px-5">
@@ -115,36 +156,47 @@ const ForgotPassword = () => {
           sm="12"
         >
           <Col className="px-xl-2 mx-auto" sm="8" md="6" lg="12">
-            <CardTitle tag="h2" className="fw-bold mb-1">
-              Forgot Password? 🔒
+            <CardTitle
+              tag="h2"
+              className="fw-bold mb-1"
+              style={{ direction: "rtl" }}
+            >
+              فراموشی رمز عبور 🔒
             </CardTitle>
-            <CardText className="mb-2">
-              Enter your email and we'll send you instructions to reset your
-              password
+            <CardText className="mb-2" style={{ direction: "rtl" }}>
+              پست الکترونیکی حساب کاربری خود را وارد کنید، تا لینک بازنشانی رمز
+              عبور برای آن ارسال شود
             </CardText>
+
             <Form
               className="auth-forgot-password-form mt-2"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleSubmit(onSubmit)}
             >
               <div className="mb-1">
                 <Label className="form-label" for="login-email">
-                  Email
+                  پست الکتورنیکی
                 </Label>
                 <Input
                   type="email"
                   id="login-email"
-                  placeholder="john@example.com"
+                  placeholder="pendingcoding@gmail.com"
                   autoFocus
+                  innerRef={emailRef}
+                  {...registerEmail}
+                  style={
+                    errors.email && { border: "1px solid rgb(255, 50, 50)" }
+                  }
                 />
+                <div className={style.error}> {errors.email?.message} </div>
               </div>
-              <Button color="primary" block>
-                Send reset link
+              <Button color="primary" block type="submit">
+                ارسال
               </Button>
             </Form>
             <p className="text-center mt-2">
               <Link to="/login">
                 <ChevronLeft className="rotate-rtl me-25" size={14} />
-                <span className="align-middle">Back to login</span>
+                <span className="align-middle">بازگشت به صفحه ورود</span>
               </Link>
             </p>
           </Col>
