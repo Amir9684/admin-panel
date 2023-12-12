@@ -29,8 +29,6 @@ import "@styles/react/pages/page-authentication.scss";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import toast from "react-hot-toast";
 import { forgetPasswordAPI } from "../services/api/auth";
 
 import style from "../style/auth.module.css";

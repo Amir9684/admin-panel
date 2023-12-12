@@ -80,19 +80,19 @@ const Login = () => {
     const loginApi = await loginAPI(obj);
 
     if (loginApi.roles.includes("Administrator") === true) {
-      toast.success("با موفقیت وارد شدید");
+      toast.success("با موفقیت وارد شدید", { position: "top-center" });
       setItem("user", obj);
       setItem("token", loginApi.token);
       setTimeout(() => {
         navigate("/");
-      }, 500);
+      }, 700);
     } else if (loginApi.roles.includes("Teacher") === true) {
-      toast.success("با موفقیت وارد شدید");
+      toast.success("با موفقیت وارد شدید" , { position: "top-center" });
       setTimeout(() => {
         navigate("/");
       }, 700);
     } else {
-      toast.error("مجوز ورود ندارید");
+      toast.error("مجوز ورود ندارید" , { position: "top-center" });
     }
   };
 
@@ -100,7 +100,6 @@ const Login = () => {
     <div className="auth-wrapper auth-cover">
       <Row className="auth-inner m-0">
         <Link className="brand-logo" to="/" onClick={(e) => e.preventDefault()}>
-
           {/* <svg viewBox="0 0 139 95" version="1.1" height="28">
             <defs>
               <linearGradient

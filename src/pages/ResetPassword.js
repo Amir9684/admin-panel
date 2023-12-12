@@ -92,12 +92,14 @@ const ResetPassword = () => {
     console.log(resetPassApi, values);
 
     if (resetPassApi.success === true) {
-      toast.success(resetPassApi.message);
+      toast.success(resetPassApi.message, { position: "top-center" });
       setTimeout(() => {
         navigate("/login");
       }, 700);
     } else {
-      toast.error("مشکلی پیش آمده، دوباره امتحان کنید");
+      toast.error("مشکلی پیش آمده، دوباره امتحان کنید", {
+        position: "top-center",
+      });
     }
   };
 
