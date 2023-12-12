@@ -12,47 +12,49 @@ import classnames from "classnames";
 // ** Reactstrap Imports
 import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 
-
 const ProductsPage = (props) => {
   // ** Props
   const {
     store,
     dispatch,
-    activeView,
     sidebarOpen,
     getProducts,
-    setActiveView,
     setSidebarOpen,
+    isLoading,
+    setIsLoading,
   } = props;
 
   // ** Handles pagination
-  const handlePageChange = (val) => {
+  const handlePageChange = async (val) => {
+    setIsLoading(true);
     if (val === "next") {
-      dispatch(
+      await dispatch(
         getProducts({
           ...store.params,
           PageNumber: store.params?.PageNumber + 1,
         })
       );
+      setIsLoading(false);
     } else if (val === "prev") {
-      dispatch(
+      await dispatch(
         getProducts({
           ...store.params,
           PageNumber: store.params?.PageNumber - 1,
         })
       );
+      setIsLoading(false);
     } else {
-      dispatch(getProducts({ ...store.params, PageNumber: val }));
+      await dispatch(getProducts({ ...store.params, PageNumber: val }));
+      setIsLoading(false);
     }
   };
 
   // ** Render pages
   const renderPageItems = () => {
     const arrLength =
-      store.totalCount !== 0 && store.news?.length !== 0
-        ? Number(store.totalCount) / store.news?.length
-        : 3;
-
+      Number(store.totalCount) !== 0 && store.news?.length !== 0
+        ? Math.ceil(Number(store.totalCount) / 6)
+        : 2;
     return new Array(Math.trunc(arrLength)).fill().map((item, index) => {
       return (
         <PaginationItem
@@ -77,22 +79,20 @@ const ProductsPage = (props) => {
       handlePageChange("next");
     }
   };
-
   return (
     <div className="content-detached content-right">
-      <div className="content-body">
+      <div className="content-body" style={{ margin: 0 }}>
         <ProductsHeader
           store={store}
           dispatch={dispatch}
-          activeView={activeView}
           getProducts={getProducts}
-          setActiveView={setActiveView}
           setSidebarOpen={setSidebarOpen}
         />
         <div
           className={classnames("body-content-overlay", {
             show: sidebarOpen,
           })}
+          style={{ width: "100%" }}
           onClick={() => setSidebarOpen(false)}
         ></div>
         <ProductsSearchbar
@@ -105,7 +105,6 @@ const ProductsPage = (props) => {
             <ProductCards
               store={store}
               dispatch={dispatch}
-              activeView={activeView}
               products={store.news}
               getProducts={getProducts}
             />

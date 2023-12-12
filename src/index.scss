@@ -1,2 +1,17 @@
-@import '../node_modules/prismjs/themes/prism-tomorrow';
-@import './assets/scss/app.scss';
+@import "../node_modules/prismjs/themes/prism-tomorrow";
+@import "./assets/scss/app.scss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Shabnam";
+  src: url("./@core/assets/fonts/shabnam-font-v5.0.1/Shabnam.ttf");
+}
+html,
+body,
+:root,
+#root {
+  height: 100%;
+  font-family: "Shabnam";
+}

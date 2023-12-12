@@ -61,13 +61,20 @@ const renderClient = (row) => {
     color = states[stateNum];
 
   if (row.tumbImageAddress?.length) {
-    return <Avatar className="me-50" img={row.avatar} width="32" height="32" />;
+    return (
+      <Avatar
+        className="me-50"
+        img={row.tumbImageAddress}
+        width="32"
+        height="32"
+      />
+    );
   } else {
     return (
       <Avatar
         color={color}
         className="me-50"
-        content={row.client ? row.client.name : "John Doe"}
+        content={row.tumbImageAddress ? row.title : "John Doe"}
         initials
       />
     );
@@ -76,18 +83,18 @@ const renderClient = (row) => {
 
 // ** Table columns
 export const columns = [
-  {
-    name: "#",
-    sortable: true,
-    sortField: "id",
-    minWidth: "107px",
-    // selector: row => row.id,
-    cell: (row) => (
-      <Link
-        to={`/course-managment/preview/${row.courseId}`}
-      >{`#${row.courseId.substr(0, 10)}`}</Link>
-    ),
-  },
+  // {
+  //   name: "#",
+  //   sortable: true,
+  //   sortField: "id",
+  //   minWidth: "107px",
+  //   // selector: row => row.id,
+  //   cell: (row) => (
+  //     <Link
+  //       to={`/course-managment/preview/${row.courseId}`}
+  //     >{`#${row.courseId.substr(0, 10)}`}</Link>
+  //   ),
+  // },
   {
     name: "عنوان دوره",
     sortable: true,
@@ -149,24 +156,24 @@ export const columns = [
     },
     // selector: row => row.dueDate
   },
+  // {
+  //   sortable: true,
+  //   name: "Balance",
+  //   minWidth: "164px",
+  //   sortField: "balance",
+  //   // selector: row => row.balance,
+  //   cell: (row) => {
+  //     return row.balance !== 0 ? (
+  //       <span>{row.balance}</span>
+  //     ) : (
+  //       <Badge color="light-success" pill>
+  //         پرداخت شده
+  //       </Badge>
+  //     );
+  //   },
+  // },
   {
-    sortable: true,
-    name: "Balance",
-    minWidth: "164px",
-    sortField: "balance",
-    // selector: row => row.balance,
-    cell: (row) => {
-      return row.balance !== 0 ? (
-        <span>{row.balance}</span>
-      ) : (
-        <Badge color="light-success" pill>
-          Paid
-        </Badge>
-      );
-    },
-  },
-  {
-    name: "Action",
+    name: "عملیات",
     minWidth: "110px",
     cell: (row) => {
       const dispatch = useDispatch();
@@ -174,7 +181,7 @@ export const columns = [
       return (
         <div className="column-action d-flex align-items-center">
           <Link
-            to={`/apps/invoice/preview/${row.courseId}`}
+            to={`/course-management/${row.courseId}`}
             id={`pw-tooltip-${row.courseId}`}
           >
             <Eye size={17} className="mx-1" />
@@ -186,15 +193,14 @@ export const columns = [
             <DropdownMenu end>
               <DropdownItem
                 tag={Link}
-                to={`/apps/invoice/edit/${row.id}`}
+                to={`/course-management/edit/${row.courseId}`}
                 className="w-100"
               >
                 <Edit size={14} className="me-50" />
                 <span className="align-middle">ویرایش</span>
               </DropdownItem>
               <DropdownItem
-                tag="a"
-                href="/"
+                tag="button"
                 className="w-100"
                 onClick={(e) => {
                   e.preventDefault();

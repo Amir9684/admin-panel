@@ -2,6 +2,7 @@
 import classnames from "classnames";
 import { Menu, Grid, List } from "react-feather";
 
+import { Link } from "react-router-dom";
 // ** Reactstrap Imports
 import {
   Row,
@@ -16,15 +17,7 @@ import {
 
 const ProductsHeader = (props) => {
   // ** Props
-  const {
-    activeView,
-    setActiveView,
-    dispatch,
-    getProducts,
-    store,
-    setSidebarOpen,
-  } = props;
-
+  const { dispatch, getProducts, store } = props;
   // ** Sorting obj
   const sortToggleText = {
     "InsertDate-DESC": "جدیدترین",
@@ -42,19 +35,11 @@ const ProductsHeader = (props) => {
         <Col sm="12">
           <div className="ecommerce-header-items">
             <div className="result-toggler">
-              <button
-                className="navbar-toggler shop-sidebar-toggler"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <span className="navbar-toggler-icon d-block d-lg-none">
-                  <Menu size={14} />
-                </span>
-              </button>
               <span className="search-results">
-                {store.news?.length} تنیجه یافت شد
+                {store.totalCount} تنیجه یافت شد
               </span>
             </div>
-            <div className="view-options d-flex">
+            <div className="view-options d-flex justify-content-between">
               <UncontrolledButtonDropdown className="dropdown-sort">
                 <DropdownToggle
                   className="text-capitalize me-1"
@@ -109,30 +94,9 @@ const ProductsHeader = (props) => {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledButtonDropdown>
-              <ButtonGroup>
-                <Button
-                  tag="label"
-                  className={classnames("btn-icon view-btn grid-view-btn", {
-                    active: activeView === "grid",
-                  })}
-                  color="primary"
-                  outline
-                  onClick={() => setActiveView("grid")}
-                >
-                  <Grid size={18} />
-                </Button>
-                <Button
-                  tag="label"
-                  className={classnames("btn-icon view-btn list-view-btn", {
-                    active: activeView === "list",
-                  })}
-                  color="primary"
-                  outline
-                  onClick={() => setActiveView("list")}
-                >
-                  <List size={18} />
-                </Button>
-              </ButtonGroup>
+              <Link to={`/news/add`}>
+                <Button color="primary">افزودن بلاگ</Button>
+              </Link>
             </div>
           </div>
         </Col>

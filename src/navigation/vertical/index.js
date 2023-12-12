@@ -17,6 +17,6 @@ export default [
     id: "courses",
     title: "دوره‌ها",
     icon: <Book size={20} />,
-    navLink: "/courses",
+    navLink: "/course-management",
   },
 ];

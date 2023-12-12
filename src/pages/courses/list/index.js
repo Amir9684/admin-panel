@@ -12,6 +12,9 @@ import DataTable from "react-data-table-component";
 
 // ** Reactstrap Imports
 import { Button, Input, Row, Col, Card } from "reactstrap";
+import { getAllCourses, useCourses } from "../../../redux/courses";
+import { apiCall } from "../../../services/interceptor/api-call";
+import { getPersianNumbers } from "../../../utility/get-persian-numbers";
 
 // ** Store & Actions
 import { useDispatch } from "react-redux";
@@ -19,9 +22,6 @@ import { useDispatch } from "react-redux";
 // ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-import { getAllCourses, useCourses } from "../../../redux/courses";
-import { apiCall } from "../../../@core/auth/jwt/services/interceptor/api-call";
-import { getPersianNumbers } from "../../../utility/get-persian-numbers";
 
 const CustomHeader = ({
   handleFilter,
@@ -103,7 +103,7 @@ const InvoiceList = () => {
   // ** States
   const [value, setValue] = useState("");
   const [sort, setSort] = useState("desc");
-  const [sortColumn, setSortColumn] = useState("id");
+  const [sortColumn, setSortColumn] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [statusValue, setStatusValue] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
