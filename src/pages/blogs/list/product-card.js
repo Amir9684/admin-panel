@@ -35,20 +35,33 @@ export const ProductCard = ({ item, dispatch }) => {
       }
     >
       <div className="item-img text-center mx-auto">
-        <Link to={`/news/${item.id}`}>
+        {item.isActive ? (
+          <Link to={`/news/${item.id}`}>
+            <img
+              className="img-fluid card-img-top"
+              style={{ width: "100vh", height: "400px", objectFit: "cover" }}
+              src={item.currentImageAddressTumb || defaultImage}
+              alt={item.currentImageAddressTumb || defaultImage}
+            />
+          </Link>
+        ) : (
           <img
             className="img-fluid card-img-top"
             style={{ width: "100vh", height: "400px", objectFit: "cover" }}
             src={item.currentImageAddressTumb || defaultImage}
             alt={item.currentImageAddressTumb || defaultImage}
           />
-        </Link>
+        )}
       </div>
       <CardBody>
         <h6 className="item-name" style={{ fontSize: "20px" }}>
-          <Link className="text-body" to={`/news/${item.id}`}>
-            {item.title}
-          </Link>
+          {item.isActive ? (
+            <Link className="text-body" to={`/news/${item.id}`}>
+              {item.title}
+            </Link>
+          ) : (
+            <>{item.title}</>
+          )}
         </h6>
         <CardText
           className="item-description"
