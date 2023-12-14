@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom'
 
 // ** Custom Components
-import Avatar from '@components/avatar'
+import Avatar from '../../../components/avatar'
 
 // ** Store & Actions
 import { store } from '@store/store'

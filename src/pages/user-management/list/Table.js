@@ -106,7 +106,7 @@ const CustomHeader = ({
       <Row>
         <Col xl="6" className="d-flex align-items-center p-0">
           <div className="d-flex align-items-center w-100">
-            <label htmlFor="rows-per-page">Show</label>
+          <label htmlFor="rows-per-page" style={{margin:"0 5px"}}>تعداد نمایش در صفحه</label>
             <Input
               className="mx-50"
               type="select"
@@ -119,7 +119,7 @@ const CustomHeader = ({
               <option value="8">8</option>
               <option value="12">12</option>
             </Input>
-            <label htmlFor="rows-per-page">Entries</label>
+
           </div>
         </Col>
         <Col
@@ -128,7 +128,7 @@ const CustomHeader = ({
         >
           <div className="d-flex align-items-center mb-sm-0 mb-1 me-1">
             <label className="mb-0" htmlFor="search-invoice">
-              Search:
+              جستجو
             </label>
             <Input
               id="search-invoice"
@@ -140,7 +140,7 @@ const CustomHeader = ({
           </div>
 
           <div className="d-flex align-items-center table-header-actions">
-            <UncontrolledDropdown className="me-1">
+            {/* <UncontrolledDropdown className="me-1">
               <DropdownToggle color="secondary" caret outline>
                 <Share className="font-small-4 me-50" />
                 <span className="align-middle">Export</span>
@@ -170,14 +170,14 @@ const CustomHeader = ({
                   <span className="align-middle">Copy</span>
                 </DropdownItem>
               </DropdownMenu>
-            </UncontrolledDropdown>
+            </UncontrolledDropdown> */}
 
             <Button
               className="add-new-user"
               color="primary"
               onClick={toggleSidebar}
             >
-              Add New User
+              افزودن کاربر
             </Button>
           </div>
         </Col>
@@ -195,7 +195,7 @@ const UsersList = () => {
   // ** States
   const [sort, setSort] = useState("DESC");
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [sortColumn, setSortColumn] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -204,13 +204,12 @@ const UsersList = () => {
     label: "انتخاب نقش",
   });
   const [currentPlan, setCurrentPlan] = useState({
-    value: "",
+    value: false,
     label: "خیر ",
   });
   const [currentStatus, setCurrentStatus] = useState({
     value: "",
     label: "انتخاب وضیعت",
-    number: 0,
   });
 
   // ** Function to toggle sidebar
@@ -230,13 +229,14 @@ const UsersList = () => {
         SortType: sort.toUpperCase(),
         SortingCol: result(sortColumn),
         Query: searchTerm,
-        PageNumber: currentPage,
+        PageNumber: currentPageNumber,
         RowsOfPage: rowsPerPage,
         roleId: currentRole.value,
         IsActiveUser: currentStatus.value,
+        IsDeletedUser:currentPlan
       })
     );
-  }, [dispatch, store?.length, sort, sortColumn, currentPage]);
+  }, [dispatch, store?.length, sort, sortColumn, currentPageNumber]);
 
   // ** User filter options
   const roleOptions = [
@@ -270,14 +270,14 @@ const UsersList = () => {
         SortType: sort.toUpperCase(),
         SortingCol: result(sortColumn),
         Query: searchTerm,
-        PageNumber: currentPage,
+        PageNumber: currentPageNumber,
         RowsOfPage: rowsPerPage,
         roleId: currentRole.value,
         IsActiveUser: currentStatus.value,
         currentPlan: currentPlan.value,
       })
     );
-    setCurrentPage(page.selected + 1);
+    setCurrentPageNumber(page.selected + 1);
   };
 
   // ** Function in get data on rows per page
@@ -288,7 +288,7 @@ const UsersList = () => {
         SortType: sort.toUpperCase(),
         SortingCol: result(sortColumn),
         Query: searchTerm,
-        PageNumber: currentPage,
+        PageNumber: currentPageNumber,
         RowsOfPage: rowsPerPage,
         roleId: currentRole.value,
         IsActiveUser: currentStatus.value,
@@ -307,7 +307,7 @@ const UsersList = () => {
         SortType: sort.toUpperCase(),
         SortingCol: result(sortColumn),
         Query: searchTerm,
-        PageNumber: currentPage,
+        PageNumber: currentPageNumber,
         RowsOfPage: rowsPerPage,
         roleId: currentRole.value,
         IsActiveUser: currentStatus.value,
@@ -326,7 +326,7 @@ const UsersList = () => {
         nextLabel={""}
         pageCount={count || 1}
         activeClassName="active"
-        forcePage={currentPage !== 0 ? currentPage - 1 : 0}
+        forcePage={currentPageNumber !== 0 ? currentPageNumber - 1 : 0}
         onPageChange={(page) => handlePagination(page)}
         pageClassName={"page-item"}
         nextLinkClassName={"page-link"}
@@ -371,7 +371,7 @@ const UsersList = () => {
         SortType: sort.toUpperCase(),
         SortingCol: result(sortColumn),
         Query: searchTerm,
-        PageNumber: currentPage,
+        PageNumber: currentPageNumber,
         RowsOfPage: rowsPerPage,
         roleId: currentRole.value,
         IsActiveUser: currentStatus.value,
@@ -404,7 +404,7 @@ const UsersList = () => {
                       SortType: sort.toUpperCase(),
                       SortingCol: result(sortColumn),
                       Query: searchTerm,
-                      PageNumber: currentPage,
+                      PageNumber: currentPageNumber,
                       RowsOfPage: rowsPerPage,
                       roleId: currentRole.value,
                       IsActiveUser: currentStatus.value,
@@ -430,7 +430,7 @@ const UsersList = () => {
                       SortType: sort.toUpperCase(),
                       SortingCol: result(sortColumn),
                       Query: searchTerm,
-                      PageNumber: currentPage,
+                      PageNumber: currentPageNumber,
                       RowsOfPage: rowsPerPage,
                       roleId: currentRole.value,
                       IsActiveUser: currentStatus.value,
@@ -456,7 +456,7 @@ const UsersList = () => {
                       sort,
                       sortColumn,
                       q: searchTerm,
-                      page: currentPage,
+                      page: currentPageNumber,
                       perPage: rowsPerPage,
                       role: currentRole.value,
                       currentPlan: data.value,
