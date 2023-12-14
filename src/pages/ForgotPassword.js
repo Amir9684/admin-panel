@@ -69,7 +69,9 @@ const ForgotPassword = () => {
       customClass: {
         confirmButton: 'btn btn-primary'
       },
-      buttonsStyling: false
+      confirmButtonText: "تایید",
+      buttonsStyling: false,
+      iconColor:"#7367f0"
     })
   }
 
