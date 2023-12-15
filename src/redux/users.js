@@ -16,9 +16,18 @@ export const getAllUsers = createAsyncThunk("users/getAll", async (params) => {
   return apiCall("/User/UserMannage", { params });
 });
 
+export const getUserById = createAsyncThunk("users/getUserById", async (id) => {
+  return await apiCall.get(`/User/UserDetails/${id}`);
+  // console.log(response)
+});
+
 export const userSlice = createSlice({
   name: "users",
-  initialState: userAdaptor.getInitialState({ status: "idle", totalCount: 0 , roles:[] }),
+  initialState: userAdaptor.getInitialState({
+    status: "idle",
+    totalCount: 0,
+    roles: [],
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -34,6 +43,13 @@ export const userSlice = createSlice({
       })
       .addCase(getAllUsers.rejected, (state) => {
         state.status = "error";
+      })
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.status = "success";
+        userAdaptor.removeAll(state);
+        userAdaptor.upsertOne(state, action.payload);
+        state.totalCount = 0;
+        state.roles = [];
       });
   },
 });

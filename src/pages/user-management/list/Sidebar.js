@@ -13,7 +13,7 @@ import classnames from "classnames";
 import { useForm, Controller } from "react-hook-form";
 
 // ** Reactstrap Imports
-import { Button, Label, FormText, Form, Input } from "reactstrap";
+import { Button, Label, FormText, Form, Input, Modal } from "reactstrap";
 import { createUser } from "../../../services/api/create-user";
 
 import { useNavigate } from "react-router-dom";
@@ -94,10 +94,6 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
       }
     });
   };
-
-  useEffect(() => {
-    handleSuccess()
-  } ,[])
 
   const handleError = () => {
     return MySwal.fire({
@@ -207,6 +203,7 @@ const SidebarNewUsers = ({ open, toggleSidebar }) => {
       toggleSidebar={toggleSidebar}
       onClosed={handleSidebarClosed}
     >
+      
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-1">
           <Label className="form-label" for="firstName">
