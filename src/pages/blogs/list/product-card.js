@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 import { activeNews, deActiveNews } from "../../../redux/news";
 // ** Third Party Components
 import classnames from "classnames";
-import { Edit, Eye, EyeOff, Trash } from "react-feather";
+import { Edit, Eye, EyeOff } from "react-feather";
 import { Card, CardBody, CardFooter, CardText, Button } from "reactstrap";
-import defaultImage from "/samuel-girven-t7U6dyvd76Y-unsplash.jpg";
 
 export const ProductCard = ({ item, dispatch }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,17 +38,17 @@ export const ProductCard = ({ item, dispatch }) => {
           <Link to={`/news/${item.id}`}>
             <img
               className="img-fluid card-img-top"
-              style={{ width: "100vh", height: "400px", objectFit: "cover" }}
-              src={item.currentImageAddressTumb || defaultImage}
-              alt={item.currentImageAddressTumb || defaultImage}
+              style={{ width: "100vh", height: "400px", objectFit: "contain" }}
+              src={item.currentImageAddressTumb}
+              alt={item.currentImageAddressTumb}
             />
           </Link>
         ) : (
           <img
             className="img-fluid card-img-top"
-            style={{ width: "100vh", height: "400px", objectFit: "cover" }}
-            src={item.currentImageAddressTumb || defaultImage}
-            alt={item.currentImageAddressTumb || defaultImage}
+            style={{ width: "100vh", height: "400px", objectFit: "contain" }}
+            src={item.currentImageAddressTumb}
+            alt={item.currentImageAddressTumb}
           />
         )}
       </div>

@@ -1,4 +1,4 @@
-import { Home, Book, BookOpen, MessageCircle, FileText } from "react-feather";
+import { Home, Book, BookOpen, MessageCircle, FileText, CreditCard } from "react-feather";
 
 export default [
   {
@@ -9,14 +9,20 @@ export default [
   },
   {
     id: "news",
-    title: "بلاگ‌ها",
+    title: "مدیریت بلاگ‌ها",
     icon: <FileText size={20} />,
     navLink: "/news",
   },
   {
-    id: "courses",
-    title: "دوره‌ها",
+    id:"technologies",
+    title:"مدیریت درس‌ها",
     icon: <Book size={20} />,
+    navLink: "/techs-management",
+  },
+  {
+    id: "courses",
+    title: "مدیریت دوره‌ها",
+    icon: <CreditCard size={20} />,
     navLink: "/course-management",
   },
 ];

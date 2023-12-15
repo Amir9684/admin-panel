@@ -9,6 +9,7 @@ import { toast } from "react-hot-toast";
 // ** Custom Components
 import Avatar from "@components/avatar";
 import Breadcrumbs from "@components/breadcrumbs";
+import ImageUpload from "../../ui-elements/import";
 
 // ** Utils
 
@@ -54,8 +55,7 @@ const formSchema = z.object({
     .max(300, `کلمات کلیدی باید کمتر از ${getPersianNumbers(300)} باشد`),
   describe: z
     .string()
-    .min(70, `توضیحات باید بیشتر از ${getPersianNumbers(70)} باشد`)
-    .max(170, `توضیحات باید کمتر از ${getPersianNumbers(170)} باشد`),
+    .min(70, `توضیحات باید بیشتر از ${getPersianNumbers(70)} باشد`),
 });
 
 const BlogEdit = () => {
@@ -70,8 +70,7 @@ const BlogEdit = () => {
     [isLoading, setIsLoading] = useState(false),
     [describe, setDescribe] = useState(""),
     [keyword, setKeyword] = useState(""),
-    [featuredImg, setFeaturedImg] = useState(null),
-    [imgPath, setImgPath] = useState("banner.jpg"),
+    [imgFile, setImgFile] = useState(""),
     [categories, setCategories] = useState([]),
     [avatar, setAvatar] = useState(null);
 
@@ -97,7 +96,7 @@ const BlogEdit = () => {
           setTitle(res.detailsNewsDto.title);
           setMiniDescribe(res.detailsNewsDto.miniDescribe);
           setDescribe(res.detailsNewsDto.describe);
-          setFeaturedImg(
+          setImgFile(
             res.detailsNewsDto.currentImageAddress ||
               res.detailsNewsDto.currentImageAddressTumb
           );
@@ -126,15 +125,7 @@ const BlogEdit = () => {
       getInfos().then(() => setIsLoading(false));
     }
   }, []);
-  const onChange = (e) => {
-    const reader = new FileReader(),
-      files = e.target.files;
-    setImgPath(files[0].name);
-    reader.onload = function () {
-      setFeaturedImg(reader.result);
-    };
-    reader.readAsDataURL(files[0]);
-  };
+
   const insertDate = new Date(data?.insertDate)
     .toLocaleDateString("fa-IR-u-nu-latn")
     .split("/");
@@ -155,18 +146,19 @@ const BlogEdit = () => {
 
   const onSubmit = async (values) => {
     try {
-      if (featuredImg !== data.currentImageAddress) {
+      if (imgFile !== data.currentImageAddress) {
         const formData = new FormData();
         formData.append("NewsId", id);
-        formData.append("Files", `${imgPath},${imgPath}`);
-        formData.append("rootPath", imgPath);
+        formData.append("Files", imgFile);
+        formData.append("rootPath", "");
         await apiCall.post("/News/CreateNewsFile", formData);
       }
+
       const obj = {
         Id: id,
         SlideNumber: 1,
-        CurrentImageAddress: imgPath,
-        CurrentImageAddressTumb: imgPath,
+        CurrentImageAddress: imgFile.name,
+        CurrentImageAddressTumb: imgFile.name,
         Active: data.active,
         Title: values.title,
         GoogleTitle: (values.title + values.title).slice(0, 45),
@@ -176,7 +168,6 @@ const BlogEdit = () => {
         Keyword: values.keyword,
         IsSlider: data.isSlider,
         NewsCatregoryId: values.category,
-        Image: imgPath,
       };
       const formData = new FormData();
       for (const item in obj) formData.append(item, obj[item]);
@@ -306,49 +297,7 @@ const BlogEdit = () => {
                         />
                       </Col>
                       <Col className="mb-2" md="7" sm="12">
-                        <div className="rounded d-flex flex-column">
-                          <div
-                            className="d-flex flex-column align-items-center justify-content-center gap-2"
-                            style={{ position: "relative" }}
-                          >
-                            <img
-                              className="rounded"
-                              src={featuredImg}
-                              style={{
-                                width: "300px",
-                                height: "220px",
-                                objectFit: "cover",
-                              }}
-                              alt="featured img"
-                            />
-                            {/* <p className="my-50">
-                              <a href="/" onClick={(e) => e.preventDefault()}>
-                                {`C:/fakepath/${imgPath}`}
-                              </a>
-                            </p> */}
-                            <div
-                              className="justify-content-center"
-                              style={{ position: "absolute", bottom: "0" }}
-                            >
-                              <div className="mb-0">
-                                <Controller
-                                  id="image"
-                                  name="image"
-                                  control={form.control}
-                                  render={({ field }) => (
-                                    <Input
-                                      type="file"
-                                      onChange={onChange}
-                                      accept=".jpg, .png, .gif"
-                                      placeholder="انتخاب تصویر"
-                                      {...field}
-                                    />
-                                  )}
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        <ImageUpload setImgFile={setImgFile} />
                       </Col>
                       <Col md="6" className="mb-2">
                         <Label

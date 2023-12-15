@@ -12,21 +12,31 @@ import DataTable from "react-data-table-component";
 
 // ** Reactstrap Imports
 import { Button, Input, Row, Col, Card } from "reactstrap";
-import {
-  getAllCourses,
-  selectAllCourses,
-  useCourses,
-} from "../../../redux/courses";
-import { getPersianNumbers } from "../../../utility/get-persian-numbers";
+import { getAllCourses, useCourses } from "../../../redux/courses";
+import { apiCall } from "../../../services/interceptor/api-call";
+import { getAllTechnologies } from "../../../redux/techs";
 
 // ** Store & Actions
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 // ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
+import { getPersianNumbers } from "../../../utility/get-persian-numbers";
 
-const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
+const CustomHeader = ({
+  handleFilter,
+  value,
+  handleStatusValue,
+  statusValue,
+  handlePerPage,
+  rowsPerPage,
+}) => {
+  const [datas, setDatas] = useState([]);
+
+  useEffect(() => {
+    apiCall("/Course/GetCreate").then((res) => setDatas(res));
+  }, []);
   return (
     <div className="invoice-list-table-header w-100 py-2">
       <Row>
@@ -40,11 +50,14 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
               onChange={handlePerPage}
               className="form-control ms-50 pe-3"
             >
-              <option value="12">{getPersianNumbers(12)}</option>
-              <option value="16">{getPersianNumbers(16)}</option>
-              <option value="20">{getPersianNumbers(20)}</option>
+              <option value="4">{getPersianNumbers(4)}</option>
+              <option value="8">8</option>
+              <option value="12">12</option>
             </Input>
           </div>
+          <Button tag={Link} to="/apps/invoice/add" color="primary">
+            افزودن دوره
+          </Button>
         </Col>
         <Col
           lg="6"
@@ -61,9 +74,17 @@ const CustomHeader = ({ handleFilter, value, handlePerPage, rowsPerPage }) => {
               placeholder="جستجو دوره"
             />
           </div>
-          <Button tag={Link} to="/course-management/add" color="primary">
-            افزودن دوره
-          </Button>
+          <Input
+            className="w-auto "
+            type="select"
+            value={statusValue}
+            onChange={handleStatusValue}
+          >
+            <option value="">انتخاب وضعیت</option>
+            {datas?.statusDtos?.map((item) => (
+              <option value={item.statusName}>{item.describe}</option>
+            ))}
+          </Input>
         </Col>
       </Row>
     </div>
@@ -76,11 +97,9 @@ const result = (str) => {
 };
 
 const InvoiceList = () => {
-  const [isLoading, setIsLoading] = useState(false);
   // ** Store vars
   const dispatch = useDispatch();
-  const courses = useSelector(selectAllCourses);
-  const totalCount = useCourses().totalCount;
+  const courses = useCourses();
 
   // ** States
   const [value, setValue] = useState("");
@@ -88,62 +107,61 @@ const InvoiceList = () => {
   const [sortColumn, setSortColumn] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [statusValue, setStatusValue] = useState("");
-  const [rowsPerPage, setRowsPerPage] = useState(12);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
-    setIsLoading(true);
-    const params = {
-      SortType: sort.toUpperCase(),
-      Query: value,
-      SortingCol: result(sortColumn),
-      PageNumber: currentPage,
-      RowsOfPage: rowsPerPage,
-    };
-    dispatch(getAllCourses(params)).then(() => setIsLoading(false));
-  }, [dispatch, totalCount]);
+    dispatch(getAllTechnologies());
+  }, [dispatch, courses.totalCount]);
 
   const handleFilter = (val) => {
-    setIsLoading(true);
-    const params = {
-      SortType: sort.toUpperCase(),
-      Query: val,
-      SortingCol: result(sortColumn),
-      PageNumber: currentPage,
-      RowsOfPage: rowsPerPage,
-    };
-    dispatch(getAllCourses(params)).then(() => setIsLoading(false));
     setValue(val);
+    setTimeout(() => {
+      dispatch(getAllTechnologies());
+    }, 1000);
   };
 
   const handlePerPage = (e) => {
-    setIsLoading(true);
     const params = {
       SortType: sort.toUpperCase(),
       Query: value,
       SortingCol: result(sortColumn),
-      PageNumber: 1,
+      PageNumber: currentPage,
       RowsOfPage: parseInt(e.target.value),
+      StatusName: statusValue,
     };
-    dispatch(getAllCourses(params)).then(() => setIsLoading(false));
+    dispatch(getAllCourses(params));
     setRowsPerPage(parseInt(e.target.value));
-    setCurrentPage(1);
+  };
+
+  const handleStatusValue = (e) => {
+    setStatusValue(e.target.value);
+    const params = {
+      SortType: sort.toUpperCase(),
+      Query: value,
+      SortingCol: result(sortColumn),
+      PageNumber: currentPage,
+      RowsOfPage: rowsPerPage,
+      StatusName: e.target.value,
+    };
+    console.log(params);
+    dispatch(getAllCourses(params));
   };
 
   const handlePagination = (page) => {
-    setIsLoading(true);
     const params = {
       SortType: sort.toUpperCase(),
       Query: value,
       SortingCol: result(sortColumn),
       PageNumber: page.selected + 1,
       RowsOfPage: rowsPerPage,
+      StatusName: statusValue,
     };
-    dispatch(getAllCourses(params)).then(() => setIsLoading(false));
+    dispatch(getAllCourses(params));
     setCurrentPage(page.selected + 1);
   };
 
   const CustomPagination = () => {
-    const count = Number((totalCount / rowsPerPage).toFixed(0));
+    const count = Number((courses.totalCount / rowsPerPage).toFixed(0));
 
     return (
       <ReactPaginate
@@ -170,18 +188,19 @@ const InvoiceList = () => {
   const dataToRender = () => {
     const filters = {
       Query: value,
+      StatusName: statusValue,
     };
 
     const isFiltered = Object.keys(filters).some(function (k) {
       return filters[k].length > 0;
     });
 
-    if (courses.length > 0) {
-      return courses;
-    } else if (courses.length === 0 && isFiltered) {
+    if (courses.courses.length > 0) {
+      return courses.courses;
+    } else if (courses.courses.length === 0 && isFiltered) {
       return [];
     } else {
-      return courses.slice(0, rowsPerPage);
+      return courses.courses.slice(0, rowsPerPage);
     }
   };
 
@@ -193,6 +212,7 @@ const InvoiceList = () => {
       Query: value,
       PageNumber: currentPage,
       RowsOfPage: rowsPerPage,
+      StatusName: statusValue,
       SortingCol: result(column.sortField),
     };
     dispatch(getAllCourses(params));
@@ -201,10 +221,7 @@ const InvoiceList = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        <div
-          className="invoice-list-dataTable react-dataTable"
-          style={{ opacity: isLoading ? "0.7" : "1" }}
-        >
+        <div className="invoice-list-dataTable react-dataTable">
           <DataTable
             noHeader
             pagination
@@ -227,6 +244,7 @@ const InvoiceList = () => {
                 rowsPerPage={rowsPerPage}
                 handleFilter={handleFilter}
                 handlePerPage={handlePerPage}
+                handleStatusValue={handleStatusValue}
               />
             }
           />

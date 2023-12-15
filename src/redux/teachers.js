@@ -1,12 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 
 import { apiCall } from "../services/interceptor/api-call";
 
-const initialState = {
-  status: "idle",
-  teachers: [],
-};
+const teacherAdapter = createEntityAdapter({
+  selectId: (teacher) => teacher.teacherId,
+  sortComparer: (a, b) => a.teacherId - b.teacherId,
+});
 
 export const getAllTeachers = createAsyncThunk("teachers/getAll", async () => {
   return apiCall("/Home/GetTeachers");
@@ -14,7 +18,9 @@ export const getAllTeachers = createAsyncThunk("teachers/getAll", async () => {
 
 export const teacherSlice = createSlice({
   name: "teachers",
-  initialState,
+  initialState: teacherAdapter.getInitialState({
+    status: "idle",
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -23,13 +29,19 @@ export const teacherSlice = createSlice({
       })
       .addCase(getAllTeachers.fulfilled, (state, action) => {
         state.status = "success";
-        state.teachers = action.payload;
+        teacherAdapter.upsertMany(state, action.payload);
       })
       .addCase(getAllTeachers.rejected, (state) => {
         state.status = "error";
       });
   },
 });
+
+export const {
+  selectAll: selectAllTeachers,
+  selectById: selectTeacherById,
+  selectIds: selectTeachersIds,
+} = teacherAdapter.getSelectors((state) => state.teachers);
 
 export const useTeachers = () => useSelector((reducer) => reducer.teachers);
 

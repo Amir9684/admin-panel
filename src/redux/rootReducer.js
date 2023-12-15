@@ -5,7 +5,16 @@ import courses from "./courses";
 import users from "./users";
 import news from "./news";
 import teachers from "./teachers";
+import technology from "./techs";
 
-const rootReducer = { navbar, layout, courses, users, news, teachers };
+const rootReducer = {
+  navbar,
+  layout,
+  courses,
+  users,
+  news,
+  teachers,
+  technology,
+};
 
 export default rootReducer;

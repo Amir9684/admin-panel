@@ -1,10 +1,9 @@
 // ** Reactstrap Imports
 import { Row, Col } from "reactstrap";
 import { useContext, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // ** Demo Components
-import StatsCard from "../ui-elements/cards/statistics/StatsCard";
 import StatsHorizontal from "../../@core/components/widgets/stats/StatsHorizontal";
 import CardTransactions from "../ui-elements/cards/advance/CardTransactions";
 import LineChart from "../charts/LineChart";
@@ -14,19 +13,11 @@ import { ThemeColors } from "@src/utility/context/ThemeColors";
 // ** Styles
 import "@styles/react/libs/charts/apex-charts.scss";
 import "@styles/base/pages/dashboard-ecommerce.scss";
-import {
-  BookOpen,
-  FileText,
-  User,
-  UserCheck,
-  UserPlus,
-  UserX,
-  Users,
-} from "react-feather";
+import { BookOpen, FileText, UserCheck, Users } from "react-feather";
 import { getAllUsers, useUsers } from "../../redux/users";
 import { getAllCourses, useCourses } from "../../redux/courses";
 import { getAllNews, useNews } from "../../redux/news";
-import { getAllTeachers, useTeachers } from "../../redux/teachers";
+import { getAllTeachers, selectAllTeachers } from "../../redux/teachers";
 import { getPersianNumbers } from "../../utility/get-persian-numbers";
 
 const Home = () => {
@@ -37,12 +28,12 @@ const Home = () => {
   const users = useUsers();
   const courses = useCourses();
   const news = useNews();
-  const teachers = useTeachers();
+  const teachers = useSelector(selectAllTeachers);
 
   useEffect(() => {
     dispatch(getAllCourses());
     dispatch(getAllUsers());
-    dispatch(getAllNews());
+    dispatch(getAllNews({ RowsOfPage: 0 }));
     dispatch(getAllTeachers());
   }, []);
   return (
@@ -55,7 +46,7 @@ const Home = () => {
             icon={<Users size={20} />}
             renderStats={
               <h3 className="fw-bolder mb-75">
-                {getPersianNumbers(teachers.teachers?.length)}
+                {getPersianNumbers(teachers?.length)}
               </h3>
             }
           />

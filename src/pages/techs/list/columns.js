@@ -1,31 +1,52 @@
 // ** React Imports
-import { useState } from "react";
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-hot-toast";
+
 // ** Custom Components
 import Avatar from "@components/avatar";
 
 // ** Store & Actions
 import { useDispatch } from "react-redux";
-import {
-  activeCourse,
-  deActiveCourse,
-  deleteCourse,
-} from "../../../redux/courses";
+import { deleteCourse } from "../../../redux/courses";
 
 // ** Reactstrap Imports
-import { Badge } from "reactstrap";
+import {
+  Badge,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  UncontrolledTooltip,
+  UncontrolledDropdown,
+} from "reactstrap";
 
 // ** Third Party Components
-import { Edit, Eye, EyeOff, Trash } from "react-feather";
+import {
+  Eye,
+  Send,
+  Edit,
+  Copy,
+  Save,
+  Info,
+  Trash,
+  PieChart,
+  Download,
+  TrendingUp,
+  CheckCircle,
+  MoreVertical,
+  ArrowDownCircle,
+} from "react-feather";
 import { getPersianNumbers } from "../../../utility/get-persian-numbers";
 
 // ** Vars
-
-const statusObj = {
-  true: "light-success",
-  false: "light-secondary",
+const invoiceStatusObj = {
+  Sent: { color: "light-secondary", icon: Send },
+  Paid: { color: "light-success", icon: CheckCircle },
+  Draft: { color: "light-primary", icon: Save },
+  Downloaded: { color: "light-info", icon: ArrowDownCircle },
+  "Past Due": { color: "light-danger", icon: Info },
+  "Partial Payment": { color: "light-warning", icon: PieChart },
 };
+
 // ** renders client column
 const renderClient = (row) => {
   const stateNum = Math.floor(Math.random() * 6),
@@ -103,22 +124,6 @@ export const columns = [
     cell: (row) => <span>{row.cost || 0} ريال</span>,
   },
   {
-    name: "وضعیت",
-    minWidth: "150px",
-    sortField: "likes",
-    // selector: row => row.total,
-    cell: (row) => (
-      <Badge
-        className="text-capitalize"
-        style={{ fontSize: "15px" }}
-        color={statusObj[row.isActive]}
-        pill
-      >
-        {row.isActive ? "فعال" : "غیرفعال"}
-      </Badge>
-    ),
-  },
-  {
     sortable: true,
     minWidth: "200px",
     name: "آخرین بروزرسانی",
@@ -142,7 +147,7 @@ export const columns = [
         "اسفند",
       ];
       return (
-        <span style={{ fontSize: "14px" }}>
+        <span>
           {`${getPersianNumbers(lastUpdate?.[2], true)} ${
             months[lastUpdate?.[1] - 1]
           } ${getPersianNumbers(lastUpdate?.[0], true)}`}
@@ -171,69 +176,42 @@ export const columns = [
     name: "عملیات",
     minWidth: "110px",
     cell: (row) => {
-      const [isLoading, setIsLoading] = useState(false);
       const dispatch = useDispatch();
-
-      const handleDelete = async () => {
-        try {
-          setIsLoading(true);
-          await dispatch(deleteCourse(row.courseId, row.isActive));
-        } catch (error) {
-          console.log(error);
-          toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
-        }
-      };
-
-      const handleActiveness = () => {
-        try {
-          setIsLoading(true);
-          if (row.isActive) dispatch(deActiveCourse(row));
-          else dispatch(activeCourse(row));
-        } catch (error) {
-          console.log(error);
-          toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
-        }
-      };
 
       return (
         <div className="column-action d-flex align-items-center">
-          {row.isActive ? (
-            <>
-              <EyeOff
-                onClick={handleActiveness}
-                size={18}
-                className="me-50"
-                style={{
-                  stroke: "#ffca18",
-                  cursor: "pointer",
-                }}
-              />
-              <Link
-                to={`/course-management/${row.courseId}`}
-                id={`pw-tooltip-${row.courseId}`}
+          <Link
+            to={`/course-management/${row.courseId}`}
+            id={`pw-tooltip-${row.courseId}`}
+          >
+            <Eye size={17} className="mx-1" />
+          </Link>
+          <UncontrolledDropdown>
+            <DropdownToggle tag="span">
+              <MoreVertical size={17} className="cursor-pointer" />
+            </DropdownToggle>
+            <DropdownMenu end>
+              <DropdownItem
+                tag={Link}
+                to={`/course-management/edit/${row.courseId}`}
+                className="w-100"
               >
-                <Edit size={18} className="me-50" />
-              </Link>
-            </>
-          ) : (
-            <Eye
-              onClick={handleActiveness}
-              size={18}
-              className="me-50"
-              style={{
-                stroke: "#0ed145",
-                cursor: "pointer",
-              }}
-            />
-          )}
-          <Trash
-            onClick={handleDelete}
-            size={18}
-            style={{
-              stroke: "#cf2f4a",
-              cursor: "pointer",
-            }}
-          />
+                <Edit size={14} className="me-50" />
+                <span className="align-middle">ویرایش</span>
+              </DropdownItem>
+              <DropdownItem
+                tag="button"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(deleteCourse(row.courseId, row.isActive));
+                }}
+              >
+                <Trash size={14} className="me-50" />
+                <span className="align-middle">حذف</span>
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
         </div>
       );
     },

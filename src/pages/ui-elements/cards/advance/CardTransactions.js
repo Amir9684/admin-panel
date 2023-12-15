@@ -6,15 +6,15 @@ import * as Icon from "react-feather";
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle, CardBody } from "reactstrap";
-import { getTopCourses, useCourses } from "../../../../redux/courses";
-import { useDispatch } from "react-redux";
+import { getTopCourses, selectAllCourses } from "../../../../redux/courses";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 import { getPersianNumbers } from "../../../../utility/get-persian-numbers";
 
 const CardTransactions = () => {
   const dispatch = useDispatch();
-  const courses = useCourses();
+  const courses = useSelector(selectAllCourses);
   useEffect(() => {
     dispatch(getTopCourses(4));
   }, []);
@@ -60,7 +60,7 @@ const CardTransactions = () => {
   // ];
 
   const renderTransactions = () => {
-    return courses.courses.slice(0, 4).map((item) => {
+    return courses.slice(0, 4).map((item) => {
       return (
         <div key={item.courseId} className="transaction-item">
           <div className="d-flex">
