@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 // ** Custom Components
 import Avatar from "@components/avatar";
 
@@ -19,8 +21,6 @@ import { Badge } from "reactstrap";
 // ** Third Party Components
 import { Edit, Eye, EyeOff, Trash } from "react-feather";
 import { getPersianNumbers } from "../../../utility/get-persian-numbers";
-
-// ** Vars
 
 const statusObj = {
   true: "light-success",
@@ -59,6 +59,8 @@ const renderClient = (row) => {
     );
   }
 };
+
+const MySwal = withReactContent(Swal);
 
 // ** Table columns
 export const columns = [
@@ -176,22 +178,50 @@ export const columns = [
 
       const handleDelete = async () => {
         try {
-          setIsLoading(true);
-          await dispatch(deleteCourse(row.courseId, row.isActive));
+          return MySwal.fire({
+            title: "آیا از حذف مطمئنید؟",
+            text: "این عملیات قابل بازگشت نیست",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "بله، دوره حذف شود",
+            cancelButtonText: "لغو",
+            customClass: {
+              confirmButton: "btn btn-primary",
+              cancelButton: "btn btn-outline-danger ms-1",
+            },
+            buttonsStyling: false,
+          }).then(async (result) => {
+            if (result.value) {
+              setIsLoading(true);
+              await dispatch(deleteCourse(row));
+            } else if (result.dismiss === MySwal.DismissReason.cancel) {
+              MySwal.fire({
+                title: "درخواست لغو شد",
+                text: "حذف دوره لغو شد",
+                icon: "error",
+                customClass: {
+                  confirmButton: "btn btn-success",
+                },
+              });
+            }
+          });
         } catch (error) {
           console.log(error);
-          toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
+        } finally {
+          setIsLoading(false);
         }
       };
 
-      const handleActiveness = () => {
+      const handleActiveness = async () => {
         try {
           setIsLoading(true);
-          if (row.isActive) dispatch(deActiveCourse(row));
-          else dispatch(activeCourse(row));
+          if (row.isActive) await dispatch(deActiveCourse(row));
+          else await dispatch(activeCourse(row));
         } catch (error) {
           console.log(error);
           toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
+        } finally {
+          setIsLoading(false);
         }
       };
 
@@ -199,15 +229,25 @@ export const columns = [
         <div className="column-action d-flex align-items-center">
           {row.isActive ? (
             <>
-              <EyeOff
+              <button
+                disabled={isLoading}
                 onClick={handleActiveness}
-                size={18}
-                className="me-50"
                 style={{
-                  stroke: "#ffca18",
-                  cursor: "pointer",
+                  cursor: isLoading && "not-allowed",
+                  opacity: isLoading && "0.7",
+                  backgroundColor: "transparent",
+                  border: "transparent",
                 }}
-              />
+              >
+                <EyeOff
+                  size={18}
+                  className="me-50"
+                  style={{
+                    stroke: "#ffca18",
+                    cursor: "pointer",
+                  }}
+                />
+              </button>
               <Link
                 to={`/course-management/${row.courseId}`}
                 id={`pw-tooltip-${row.courseId}`}
@@ -216,24 +256,45 @@ export const columns = [
               </Link>
             </>
           ) : (
-            <Eye
+            <button
+              disabled={isLoading}
               onClick={handleActiveness}
-              size={18}
-              className="me-50"
               style={{
-                stroke: "#0ed145",
+                cursor: isLoading && "not-allowed",
+                opacity: isLoading && "0.7",
+                backgroundColor: "transparent",
+                border: "transparent",
+              }}
+            >
+              <Eye
+                size={18}
+                className="me-50"
+                style={{
+                  stroke: "#0ed145",
+                  cursor: "pointer",
+                }}
+              />
+            </button>
+          )}
+          <button
+            disabled={isLoading}
+            onClick={handleDelete}
+            style={{
+              cursor: isLoading && "not-allowed",
+              opacity: isLoading && "0.7",
+              backgroundColor: "transparent",
+              border: "transparent",
+            }}
+          >
+            <Trash
+              onClick={handleDelete}
+              size={18}
+              style={{
+                stroke: "#cf2f4a",
                 cursor: "pointer",
               }}
             />
-          )}
-          <Trash
-            onClick={handleDelete}
-            size={18}
-            style={{
-              stroke: "#cf2f4a",
-              cursor: "pointer",
-            }}
-          />
+          </button>
         </div>
       );
     },

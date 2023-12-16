@@ -14,10 +14,12 @@ import { getItem, setItem } from "../../../services/common/storage.services";
 
 const DataTablesReOrder = ({ stepper, data, columns }) => {
   // ** States
-  const [currentPage, setCurrentPage] = useState(0);
-
+  const [currentPage, setCurrentPage] = useState(0),
+    [itemOffset, setItemOffset] = useState(0);
   // ** Function to handle Pagination
   const handlePagination = (page) => {
+    const newOffset = (page.selected * 6) % data?.length;
+    setItemOffset(newOffset);
     setCurrentPage(page.selected);
   };
 
@@ -48,11 +50,15 @@ const DataTablesReOrder = ({ stepper, data, columns }) => {
       previousLinkClassName="page-link"
       nextClassName="page-item next-item"
       previousClassName="page-item prev-item"
-      pageCount={Math.ceil(data.length / 7) || 1}
+      pageCount={Math.ceil(data.length / 6) || 1}
       onPageChange={(page) => handlePagination(page)}
       containerClassName="pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1 mt-1"
     />
   );
+
+  const dataToRender = () => {
+    if (data.length > 0) return data.slice(itemOffset, itemOffset + 6);
+  };
 
   return (
     <Card className="overflow-hidden">
@@ -60,7 +66,7 @@ const DataTablesReOrder = ({ stepper, data, columns }) => {
         <DataTable
           noHeader
           pagination
-          data={data}
+          data={dataToRender()}
           columns={columns}
           pointerOnHover
           highlightOnHover
@@ -69,7 +75,6 @@ const DataTablesReOrder = ({ stepper, data, columns }) => {
           sortIcon={<ChevronDown size={10} />}
           paginationComponent={CustomPagination}
           paginationDefaultPage={currentPage + 1}
-          paginationRowsPerPageOptions={[10, 25, 50, 100]}
         />
       </div>
     </Card>

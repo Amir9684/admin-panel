@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, lazy } from "react";
+import { Fragment } from "react";
 // ** Layouts
 import BlankLayout from "@layouts/BlankLayout";
 import VerticalLayout from "@src/layouts/VerticalLayout";

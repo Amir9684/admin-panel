@@ -80,13 +80,15 @@ const Login = () => {
 
     if (loginApi.roles.includes("Administrator") === true) {
       toast.success("با موفقیت وارد شدید");
-      setItem("user", obj);
+      setItem("user", { ...obj, id: loginApi.id });
       setItem("token", loginApi.token);
       setTimeout(() => {
         navigate("/");
       }, 500);
     } else if (loginApi.roles.includes("Teacher") === true) {
       toast.success("با موفقیت وارد شدید");
+      setItem("user", { ...obj, id: loginApi.id });
+      setItem("token", loginApi.token);
       setTimeout(() => {
         navigate("/");
       }, 700);

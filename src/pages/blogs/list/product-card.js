@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { activeNews, deActiveNews } from "../../../redux/news";
 // ** Third Party Components
 import classnames from "classnames";
-import { Edit, Eye, EyeOff } from "react-feather";
+import { Edit, Eye, EyeOff, MessageCircle } from "react-feather";
 import { Card, CardBody, CardFooter, CardText, Button } from "reactstrap";
 
 export const ProductCard = ({ item, dispatch }) => {
@@ -74,24 +74,44 @@ export const ProductCard = ({ item, dispatch }) => {
         style={{ width: "100%", padding: "0" }}
       >
         {item.isActive && (
-          <Link
-            to={`/news/${item.id}`}
-            style={{ width: "100%", borderRadius: "0" }}
-          >
-            <Button
-              className="btn-wishlist"
-              color="light"
-              style={{ width: "100%", color: "#858585", borderRadius: "0" }}
+          <>
+            <Link
+              to={`/news/${item.id}`}
+              style={{ width: "100%", borderRadius: "0" }}
             >
-              <Edit
-                className={classnames("me-50", {
-                  "text-danger": item.isInWishlist,
-                })}
-                size={14}
-              />
-              <span>ویرایش</span>
-            </Button>
-          </Link>
+              <Button
+                className="btn-wishlist"
+                color="light"
+                style={{ width: "100%", color: "#858585", borderRadius: "0" }}
+              >
+                <Edit
+                  className={classnames("me-50", {
+                    "text-danger": item.isInWishlist,
+                  })}
+                  size={14}
+                />
+                <span>ویرایش</span>
+              </Button>
+            </Link>
+            <Link
+              to={`/news/comments/${item.id}`}
+              style={{ width: "100%", borderRadius: "0" }}
+            >
+              <Button
+                className="btn-wishlist"
+                color="primary"
+                style={{ width: "100%", color: "#858585", borderRadius: "0" }}
+              >
+                <MessageCircle
+                  className={classnames("me-50", {
+                    "text-danger": item.isInWishlist,
+                  })}
+                  size={14}
+                />
+                <span>کامنت‌ها</span>
+              </Button>
+            </Link>
+          </>
         )}
         <Button
           className="btn-wishlist"
