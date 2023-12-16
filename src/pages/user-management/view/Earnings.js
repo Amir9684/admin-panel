@@ -109,7 +109,7 @@ const Earnings = ({ success, selectedUser, setShow }) => {
   };
 
   return (
-    <Card className="earnings-card bg-white" style={{ padding: "7px 0" }}>
+    <Card className="earnings-card" style={{ padding: "7px 0" }}>
       <CardBody>
         <Row>
           <Col xs="6">

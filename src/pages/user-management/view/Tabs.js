@@ -26,6 +26,8 @@ import BillingPlanTab from "./BillingTab";
 // import Notifications from './Notifications'
 // import UserProjectsList from './UserProjectsList'
 
+// import CourseColumn from "./list";
+
 const UserTabs = ({ active, toggleTab, selectedUser, setShow, userAccess }) => {
   return (
     <Fragment>
@@ -71,7 +73,10 @@ const UserTabs = ({ active, toggleTab, selectedUser, setShow, userAccess }) => {
           <UserTimeline />
           <InvoiceList /> */}
         </TabPane>
-        <TabPane tabId="2">{/* <SecurityTab /> */}</TabPane>
+        <TabPane tabId="2">
+          {/* <SecurityTab /> */}
+          {/* <CourseColumn selectedUser={selectedUser} /> */}
+        </TabPane>
         <TabPane tabId="3">
           {/* <BillingPlanTab selectedUser={selectedUser} /> */}
         </TabPane>

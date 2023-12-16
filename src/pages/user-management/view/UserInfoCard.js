@@ -234,7 +234,7 @@ const UserInfoCard = ({
 
   return (
     <Fragment>
-      <Card className="bg-white">
+      <Card >
         <CardBody>
           <div className="user-avatar-section" style={{ margin: "-20px 0 0" }}>
             <div className="d-flex align-items-center flex-column">

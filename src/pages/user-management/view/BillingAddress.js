@@ -85,7 +85,7 @@ const BillingAddress = ({ selectedUser }) => {
 
   return (
     <Fragment>
-      <Card className="bg-white">
+      <Card>
         <CardHeader>
           <CardTitle tag="h4">سایر مشخصات</CardTitle>
           {/* <Button color='primary' size='sm' onClick={() => setShow(true)}>
