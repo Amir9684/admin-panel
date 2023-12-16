@@ -5,7 +5,17 @@ import { Fragment } from "react";
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap";
 
 // ** Icons Imports
-import { User, Lock, Bookmark, Bell, Link, Folder, Code, Command, Globe } from "react-feather";
+import {
+  User,
+  Lock,
+  Bookmark,
+  Bell,
+  Link,
+  Folder,
+  Code,
+  Command,
+  Globe,
+} from "react-feather";
 
 // ** User Components
 // import InvoiceList from './InvoiceList'
@@ -16,7 +26,7 @@ import BillingPlanTab from "./BillingTab";
 // import Notifications from './Notifications'
 // import UserProjectsList from './UserProjectsList'
 
-const UserTabs = ({ active, toggleTab, selectedUser, setShow }) => {
+const UserTabs = ({ active, toggleTab, selectedUser, setShow, userAccess }) => {
   return (
     <Fragment>
       <Nav pills className="mb-2">
@@ -32,12 +42,14 @@ const UserTabs = ({ active, toggleTab, selectedUser, setShow }) => {
             <span className="fw-bold">دوره های ثبت نامی</span>
           </NavLink>
         </NavItem>
-        <NavItem>
-          <NavLink active={active === "3"} onClick={() => toggleTab("3")}>
-            <Folder className="font-medium-3 me-50" />
-            <span className="fw-bold">دوره های ایجاد شده</span>
-          </NavLink>
-        </NavItem>
+        {userAccess === true && (
+          <NavItem>
+            <NavLink active={active === "3"} onClick={() => toggleTab("3")}>
+              <Folder className="font-medium-3 me-50" />
+              <span className="fw-bold">دوره های ایجاد شده</span>
+            </NavLink>
+          </NavItem>
+        )}
         {/* <NavItem>
           <NavLink active={active === "4"} onClick={() => toggleTab("4")}>
             <Bell className="font-medium-3 me-50" />

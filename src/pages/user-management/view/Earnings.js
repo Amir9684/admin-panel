@@ -16,8 +16,6 @@ const Earnings = ({ success, selectedUser, setShow }) => {
   const completed = +selectedUser.profileCompletionPercentage;
   const remaining = 100 - completed;
 
-  console.log(remaining, completed);
-
   const options = {
     chart: {
       toolbar: {

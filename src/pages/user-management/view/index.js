@@ -47,6 +47,9 @@ const UserView = () => {
   // for edit modal
   const [show, setShow] = useState(false);
 
+  // check access by role
+  const [userAccess, setUserAccess] = useState(null);
+
   return store.length && teachers.teachers.length > 0 ? (
     <div className="app-user-view">
       <Row>
@@ -56,6 +59,8 @@ const UserView = () => {
             teachers={teachers.teachers.length > 0 && teachers.teachers}
             show={show}
             setShow={setShow}
+            userAccess={userAccess}
+            setUserAccess={setUserAccess}
           />
           {/* <PlanCard /> */}
         </Col>
@@ -66,6 +71,7 @@ const UserView = () => {
             selectedUser={store.length > 0 && store[0]}
             show={show}
             setShow={setShow}
+            userAccess={userAccess}
           />
         </Col>
       </Row>

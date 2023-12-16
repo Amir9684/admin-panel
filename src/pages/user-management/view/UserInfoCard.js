@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 
 // ** Reactstrap Imports
 import {
@@ -25,7 +25,7 @@ import { BookOpen, Folder } from "react-feather";
 import withReactContent from "sweetalert2-react-content";
 
 // ** Custom Components
-import Avatar from "@components/avatar";
+import Avatar from "../../../components/avatar/index";
 
 // ** Utils
 import { selectThemeColors } from "@utils";
@@ -77,10 +77,30 @@ const statusColors = {
 
 const MySwal = withReactContent(Swal);
 
-const UserInfoCard = ({ selectedUser, teachers, show, setShow }) => {
+const UserInfoCard = ({
+  selectedUser,
+  teachers,
+  show,
+  setShow,
+  userAccess,
+  setUserAccess,
+}) => {
   const currentTeacher = teachers?.find(
     (t) => t.fullName === selectedUser?.fName + "-" + selectedUser?.lName
   );
+
+  const checkRole = selectedUser.roles?.map((role) => role.id);
+  const checkUserAccessByRole = () => {
+    if (checkRole.length >= 1 && checkRole != 3) {
+      setUserAccess(true);
+    } else {
+      setUserAccess(false);
+    }
+  };
+
+  useEffect(() => {
+    checkUserAccessByRole();
+  }, []);
 
   // ** State
 
@@ -101,12 +121,12 @@ const UserInfoCard = ({ selectedUser, teachers, show, setShow }) => {
 
   // ** render user img
   const renderUserImg = () => {
-    if (selectedUser !== null && selectedUser.currentPictureAddress) {
+    if (selectedUser.currentPictureAddress !== "Not-set") {
       return (
         <img
           height="110"
           width="110"
-          alt="user-avatar"
+          alt="عکسی موجود نیست"
           src={selectedUser.currentPictureAddress}
           className="img-fluid rounded mt-3 mb-2"
         />
@@ -115,9 +135,13 @@ const UserInfoCard = ({ selectedUser, teachers, show, setShow }) => {
       return (
         <Avatar
           initials
-          color={selectedUser.avatarColor || "light-primary"}
+          color={"light-primary"}
           className="rounded mt-3 mb-2"
-          content={selectedUser.fName + " " + selectedUser.lName}
+          content={
+            selectedUser.fName && selectedUser.lName
+              ? selectedUser.fName + selectedUser.lName
+              : "P C"
+          }
           contentStyles={{
             borderRadius: 0,
             fontSize: "calc(48px)",
@@ -237,30 +261,34 @@ const UserInfoCard = ({ selectedUser, teachers, show, setShow }) => {
               </div>
             </div>
           </div>
-          <div className="d-flex justify-content-center gap-2 my-2 pt-75">
-            <div className="d-flex align-items-start me-2">
-              <Badge color="light-info" className="rounded p-75">
-                <Folder className="font-medium-2" />
-              </Badge>
-              <div className="ms-75">
-                <h4 className="mb-0">
-                  {getPersianNumbers(currentTeacher?.courseCounts)}
-                </h4>
-                <small>دوره ها</small>
+
+          {userAccess === true && (
+            <div className="d-flex justify-content-center gap-2 my-2 pt-75">
+              <div className="d-flex align-items-start me-2">
+                <Badge color="light-info" className="rounded p-75">
+                  <Folder className="font-medium-2" />
+                </Badge>
+                <div className="ms-75">
+                  <h4 className="mb-0">
+                    {getPersianNumbers(currentTeacher?.courseCounts)}
+                  </h4>
+                  <small>دوره ها</small>
+                </div>
+              </div>
+              <div className="d-flex align-items-start">
+                <Badge color="light-info" className="rounded p-75">
+                  <BookOpen className="font-medium-2" />
+                </Badge>
+                <div className="ms-75">
+                  <h4 className="mb-0">
+                    {getPersianNumbers(currentTeacher?.newsCount)}
+                  </h4>
+                  <small>تعداد اخبار</small>
+                </div>
               </div>
             </div>
-            <div className="d-flex align-items-start">
-              <Badge color="light-info" className="rounded p-75">
-                <BookOpen className="font-medium-2" />
-              </Badge>
-              <div className="ms-75">
-                <h4 className="mb-0">
-                  {getPersianNumbers(currentTeacher?.newsCount)}
-                </h4>
-                <small>تعداد اخبار</small>
-              </div>
-            </div>
-          </div>
+          )}
+
           <h4 className="fw-bolder border-bottom pb-50 mb-1"> مشخصات </h4>
           <div className="info-container">
             {selectedUser !== null ? (

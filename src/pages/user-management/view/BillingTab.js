@@ -6,8 +6,11 @@ import { Fragment, useContext } from "react";
 // import BillingCurrentPlan from './BillingCurrentPlan'
 import BillingAddress from "./BillingAddress";
 import Earnings from "./Earnings";
-import { Col } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { ThemeColors } from "../../../utility/context/ThemeColors";
+import StatsVertical from "./StatsVertical";
+import { Globe } from "react-feather";
+import fullLogo from "../../../assets/images/PC-logo/pcLogo.svg";
 
 const BillingTab = ({ selectedUser, setShow }) => {
   const { colors } = useContext(ThemeColors);
@@ -17,13 +20,28 @@ const BillingTab = ({ selectedUser, setShow }) => {
       {/* <BillingCurrentPlan />
       <PaymentMethods /> */}
       <BillingAddress selectedUser={selectedUser} />
-      <Col lg="6" md="9" xs="12">
-        <Earnings
-          success={colors.primary.main}
-          selectedUser={selectedUser}
-          setShow={setShow}
-        />
-      </Col>
+      <Row>
+        <Col lg="6" md="9" xs="12">
+          <Earnings
+            success={colors.primary.main}
+            selectedUser={selectedUser}
+            setShow={setShow}
+          />
+        </Col>
+        {/* <Col lg="3" md="4" xs="7">
+          <StatsVertical
+            className="bg-white"
+            selectedUser={selectedUser}
+            icon={<Globe size={21} />}
+            color="info"
+            stats="36.9k"
+            statTitle="Views"
+          />
+        </Col>
+        <Col lg="3" md="4" xs="7" className="bg-white">
+          <img src={fullLogo} style={{width:"90%" , height:"90%"}}/>
+        </Col> */}
+      </Row>
     </Fragment>
   );
 };

@@ -1,123 +1,157 @@
 // ** React Imports
-import { Fragment, useEffect } from 'react'
+import { forwardRef } from 'react'
 
 // ** Third Party Components
-import Prism from 'prismjs'
+import Proptypes from 'prop-types'
+import classnames from 'classnames'
 
 // ** Reactstrap Imports
-import { Row, Col, CardText } from 'reactstrap'
+import { Badge } from 'reactstrap'
 
-// ** Third Party Components
-import Card from '@components/card-snippet'
-import BreadCrumbs from '@components/breadcrumbs'
+const Avatar = forwardRef((props, ref) => {
+  // ** Props
+  const {
+    img,
+    size,
+    icon,
+    color,
+    status,
+    badgeUp,
+    content,
+    tag: Tag,
+    initials,
+    imgWidth,
+    className,
+    badgeText,
+    imgHeight,
+    badgeColor,
+    imgClassName,
+    contentStyles,
+    ...rest
+  } = props
 
-// ** Demo Components
-import AvatarSizes from './AvatarSizes'
-import AvatarIcons from './AvatarIcons'
-import AvatarGroup from './AvatarGroup'
-import AvatarColors from './AvatarColors'
-import AvatarStatus from './AvatarStatus'
-import AvatarInitials from './AvatarInitials'
-import AvatarLightColors from './AvatarLightColors'
-import AvatarGroupTooltip from './AvatarGroupTooltip'
-
-// ** Source Code
-import {
-  avatarIcons,
-  avatarSizes,
-  avatarGroup,
-  avatarColors,
-  avatarStatus,
-  avatarInitials,
-  avatarLightColors,
-  avatarGroupTooltip
-} from './AvatarSourceCode'
-
-const Avatar = () => {
-  useEffect(() => {
-    Prism.highlightAll()
-  }, [])
+  // ** Function to extract initials from content
+  const getInitials = str => {
+    const results = []
+    const wordArray = str.split(' ')
+    wordArray.forEach(e => {
+      results.push(e[0])
+    })
+    return results.join('')
+  }
 
   return (
-    <Fragment>
-      <BreadCrumbs title='Avatar' data={[{ title: 'Components' }, { title: 'Avatar' }]} />
-      <Row className='match-height'>
-        <Col xl='6' lg='12'>
-          <Card title='Sizes' code={avatarSizes}>
-            <CardText className='mb-0'>
-              Use <code>size=[sm | lg | xl]</code> prop to change avatar's size. You can also use <code>height</code> &{' '}
-              <code>width</code> prop for a custom size
-            </CardText>
-            <AvatarSizes />
-          </Card>
-        </Col>
-        <Col xl='6' lg='12'>
-          <Card title='Intials' code={avatarInitials}>
-            <CardText className='mb-0'>
-              Use prop <code>initials</code> to show only Initials of content.
-            </CardText>
-            <AvatarInitials />
-          </Card>
-        </Col>
-        <Col xl='6' lg='12'>
-          <Card title='Colors' code={avatarColors}>
-            <CardText className='mb-0'>
-              Use prop <code>color=[primary | success | danger | info | warning | dark]</code> to change background
-              color of your avatar.
-            </CardText>
-            <AvatarColors />
-          </Card>
-        </Col>
-        <Col xl='6' lg='12'>
-          <Card title='Light Colors' code={avatarLightColors}>
-            <CardText className='mb-0'>
-              Use prop{' '}
-              <code>
-                color=[light-primary | light-success | light-danger | light-info | light-warning | light-dark]
-              </code>{' '}
-              to change background color of your avatar.
-            </CardText>
-            <AvatarLightColors />
-          </Card>
-        </Col>
-        <Col xl='6' lg='12'>
-          <Card title='Icons' code={avatarIcons}>
-            <CardText className='mb-0'>
-              Use prop <code>icon</code> to create avatar with icon.
-            </CardText>
-            <AvatarIcons />
-          </Card>
-        </Col>
-        <Col xl='6' sm='12'>
-          <Card title='Status' code={avatarStatus}>
-            <CardText className='mb-0'>
-              Use prop <code>status=[online | offline | away | busy]</code> to create avatar with status.
-            </CardText>
-            <AvatarStatus />
-          </Card>
-        </Col>
-        <Col xl='6' sm='12'>
-          <Card title='Avatar Group' code={avatarGroup}>
-            <CardText>
-              Use <code>&lt;AvatarGroup /&gt;</code> component and pass <code>data</code> prop to create a grouped
-              avatar.
-            </CardText>
-            <CardText>Data prop must be an array of object which contains props to be passed on avatar.</CardText>
-            <AvatarGroup />
-          </Card>
-        </Col>
-        <Col xl='6' sm='12'>
-          <Card title='Avatar Group Tooltip' code={avatarGroupTooltip}>
-            <CardText>
-              Add an extra property of <code>title</code> in the data you pass in <code>&lt;AvatarGroup /&gt;</code> to
-              create avatar group with tooltip.
-            </CardText>
+    <Tag
+      className={classnames('avatar', {
+        [className]: className,
+        [`bg-${color}`]: color,
+        [`avatar-${size}`]: size
+      })}
+      ref={ref}
+      {...rest}
+    >
+      {img === false || img === undefined ? (
+        <span
+          className={classnames('avatar-content', {
+            'position-relative': badgeUp
+          })}
+          style={contentStyles}
+        >
+          {initials ? getInitials(content) : content}
 
-            <AvatarGroupTooltip />
-          </Card>
-        </Col>
-      </Row>
-    </Fragment>
+          {icon ? icon : null}
+          {badgeUp ? (
+            <Badge color={badgeColor ? badgeColor : 'primary'} className='badge-sm badge-up' pill>
+              {badgeText ? badgeText : '0'}
+            </Badge>
+          ) : null}
+        </span>
+      ) : (
+        <img
+          className={classnames({
+            [imgClassName]: imgClassName
+          })}
+          src={img}
+          alt='avatarImg'
+          height={imgHeight && !size ? imgHeight : 32}
+          width={imgWidth && !size ? imgWidth : 32}
+        />
+      )}
+      {status ? (
+        <span
+          className={classnames({
+            [`avatar-status-${status}`]: status,
+            [`avatar-status-${size}`]: size
+          })}
+        ></span>
+      ) : null}
+    </Tag>
   )
-}
+})
+
 export default Avatar
+
+// ** PropTypes
+Avatar.propTypes = {
+  icon: Proptypes.node,
+  src: Proptypes.string,
+  badgeUp: Proptypes.bool,
+  content: Proptypes.string,
+  badgeText: Proptypes.string,
+  className: Proptypes.string,
+  imgClassName: Proptypes.string,
+  contentStyles: Proptypes.object,
+  size: Proptypes.oneOf(['sm', 'lg', 'xl']),
+  tag: Proptypes.oneOfType([Proptypes.func, Proptypes.string]),
+  status: Proptypes.oneOf(['online', 'offline', 'away', 'busy']),
+  imgHeight: Proptypes.oneOfType([Proptypes.string, Proptypes.number]),
+  imgWidth: Proptypes.oneOfType([Proptypes.string, Proptypes.number]),
+  badgeColor: Proptypes.oneOf([
+    'primary',
+    'secondary',
+    'success',
+    'danger',
+    'info',
+    'warning',
+    'dark',
+    'light-primary',
+    'light-secondary',
+    'light-success',
+    'light-danger',
+    'light-info',
+    'light-warning',
+    'light-dark'
+  ]),
+  color: Proptypes.oneOf([
+    'primary',
+    'secondary',
+    'success',
+    'danger',
+    'info',
+    'warning',
+    'dark',
+    'light-primary',
+    'light-secondary',
+    'light-success',
+    'light-danger',
+    'light-info',
+    'light-warning',
+    'light-dark'
+  ]),
+  initials(props) {
+    if (props['initials'] && props['content'] === undefined) {
+      return new Error('content prop is required with initials prop.')
+    }
+    if (props['initials'] && typeof props['content'] !== 'string') {
+      return new Error('content prop must be a string.')
+    }
+    if (typeof props['initials'] !== 'boolean' && props['initials'] !== undefined) {
+      return new Error('initials must be a boolean!')
+    }
+  }
+}
+
+// ** Default Props
+Avatar.defaultProps = {
+  tag: 'div'
+}
