@@ -145,20 +145,36 @@ const BlogEdit = () => {
   ];
 
   const onSubmit = async (values) => {
+    let toaster;
+    let picture = null;
     try {
       if (imgFile !== data.currentImageAddress) {
+        toaster = toast.loading("در حال آپلود عکس");
+
         const formData = new FormData();
         formData.append("NewsId", id);
         formData.append("Files", imgFile);
         formData.append("rootPath", "");
-        await apiCall.post("/News/CreateNewsFile", formData);
+        await apiCall
+          .post("/News/CreateNewsFile", formData)
+          .then(async (res) => {
+            if (res.success)
+              await apiCall(`/News/${id}`).then((respond) => {
+                picture =
+                  respond.detailsNewsDto.currentImageAddress ||
+                  respond.detailsNewsDto.currentImageAddressTumb;
+                toast.remove(toaster);
+              });
+            else toast.remove(toaster);
+          });
       }
 
       const obj = {
         Id: id,
         SlideNumber: 1,
-        CurrentImageAddress: imgFile.name,
-        CurrentImageAddressTumb: imgFile.name,
+        CurrentImageAddress: picture,
+        CurrentImageAddressTumb: picture,
+        Image: picture,
         Active: data.active,
         Title: values.title,
         GoogleTitle: (values.title + values.title).slice(0, 45),
@@ -169,9 +185,12 @@ const BlogEdit = () => {
         IsSlider: data.isSlider,
         NewsCatregoryId: values.category,
       };
+      console.log(obj);
+      toaster = toast.loading("درحال بروزرسانی");
       const formData = new FormData();
       for (const item in obj) formData.append(item, obj[item]);
       await apiCall.put("/News/UpdateNews", formData).then((res) => {
+        toast.remove(toaster);
         if (res.success) toast.success("بلاگ بروزرسانی شد");
       });
     } catch (error) {
@@ -313,7 +332,10 @@ const BlogEdit = () => {
                         </Col>
                       </Col>
                       <Col className="mb-2" md="6" sm="12">
-                        <ImageUpload setImgFile={setImgFile} />
+                        <ImageUpload
+                          imgFile={imgFile}
+                          setImgFile={setImgFile}
+                        />
                       </Col>
                       <Col md="6" className="mb-2">
                         <Label

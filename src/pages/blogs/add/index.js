@@ -7,14 +7,10 @@ import { useForm, FormProvider, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // ** Third Party Components
-import Select from "react-select";
+import ImageUpload from "../../ui-elements/import";
 import { toast } from "react-hot-toast";
 // ** Custom Components
-import Avatar from "@components/avatar";
 import Breadcrumbs from "@components/breadcrumbs";
-
-// ** Utils
-import { selectThemeColors } from "@utils";
 
 // ** Reactstrap Imports
 import {
@@ -22,8 +18,8 @@ import {
   Col,
   Card,
   CardBody,
-  CardText,
   Form,
+  FormFeedback,
   Label,
   Input,
   Button,
@@ -39,29 +35,42 @@ import "@styles/base/pages/page-blog.scss";
 
 const formSchema = z.object({
   title: z
-    .string()
+    .string({
+      required_error: "یک عنوان را بنویسید",
+    })
     .min(20, `عنوان باید بیشتر از ${getPersianNumbers(20)} باشد`)
     .max(120, `عنوان باید کمتر از ${getPersianNumbers(120)} باشد`),
-  category: z.string().min(1, "یک دسته بندی را انتخاب کتید"),
+  category: z
+    .string({
+      required_error: "یک دسته بندی را انتخاب کتید",
+    })
+    .min(1, "یک دسته بندی را انتخاب کتید"),
   miniDescribe: z
-    .string()
+    .string({
+      required_error: "یک خلاصه را بنویسید",
+    })
     .min(10, `توضیح مختصر باید بیشتر از ${getPersianNumbers(10)} باشد`)
     .max(300, `توضیح مختصر باید کمتر از ${getPersianNumbers(20)} باشد`),
   keyword: z
-    .string()
+    .string({
+      required_error: "کلمه کلیدی را بنویسید",
+    })
     .min(10, `کلمات کلیدی باید بیشتر از ${getPersianNumbers(10)} باشد`)
     .max(300, `کلمات کلیدی باید کمتر از ${getPersianNumbers(300)} باشد`),
   describe: z
-    .string()
+    .string({
+      required_error: "توضیحی  بنویسید",
+    })
     .min(70, `توضیحات باید بیشتر از ${getPersianNumbers(70)} باشد`)
     .max(170, `توضیحات باید کمتر از ${getPersianNumbers(170)} باشد`),
-  image: z.string().min(1, "image is required"),
 });
 
 const BlogEdit = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
   });
+
+  const { isSubmitting } = form.formState;
   // ** States
   // { value: "خبر ‌های اقتصادی", label: "خبر ‌های اقتصادی" },
   const [featuredImg, setFeaturedImg] = useState(null),
@@ -77,16 +86,6 @@ const BlogEdit = () => {
       setCategories(newArray);
     });
   }, []);
-  const onChange = (e) => {
-    const reader = new FileReader(),
-      files = e.target.files;
-    setImgPath(files[0].name);
-    reader.onload = function () {
-      setFeaturedImg(reader.result);
-    };
-    reader.readAsDataURL(files[0]);
-  };
-  console.log(featuredImg);
   const navigate = useNavigate();
 
   const onSubmit = async (values) => {
@@ -126,8 +125,8 @@ const BlogEdit = () => {
   return (
     <div className="blog-edit-wrapper">
       <Breadcrumbs
-        title="افزودن بلاگ"
-        data={[{ title: "بلاگ" }, { title: "افزودن" }]}
+        title="ویرایش بلاگ"
+        data={[{ title: "بلاگ" }, { title: "ویرایش" }]}
       />
       <Row>
         <Col sm="12">
@@ -136,116 +135,82 @@ const BlogEdit = () => {
               <FormProvider {...form}>
                 <Form
                   className="mt-2 d-flex d-flex-row"
+                  style={{ width: "100%" }}
                   onSubmit={form.handleSubmit(onSubmit)}
                 >
-                  <Row>
-                    <Col lg="3" md="5" className="mb-2 align-self-end">
-                      <Label
-                        className="form-label"
-                        htmlFor="title"
-                        style={{ fontSize: "17px" }}
-                      >
-                        عنوان
-                      </Label>
-                      <Controller
-                        id="title"
-                        name="title"
-                        control={form.control}
-                        render={({ field }) => (
-                          <Input
-                            autoFocus
-                            type="text"
-                            placeholder="عنوان..."
-                            invalid={form.formState.errors.title && true}
-                            {...field}
-                          />
-                        )}
-                      />
-                      {form.formState.errors.title && (
-                        <FormFeedback>
-                          {form.formState.errors.title.message}
-                        </FormFeedback>
-                      )}
-                    </Col>
-                    <Col lg="2" md="5" className="mb-2 align-self-end">
-                      <Label
-                        className="form-label"
-                        htmlFor="category"
-                        style={{ fontSize: "17px" }}
-                      >
-                        دسته بندی
-                      </Label>
-                      <Controller
-                        id="category"
-                        name="category"
-                        control={form.control}
-                        render={({ field }) => (
-                          <Input
-                            autoFocus
-                            type="select"
-                            placeholder="john@example.com"
-                            invalid={form.formState.errors.category && true}
-                            {...field}
-                          >
-                            <option value="">انتخاب</option>
-                            {categories.map((category) => (
-                              <option value={category.value}>
-                                {category.label}
-                              </option>
-                            ))}
-                          </Input>
-                        )}
-                      />
-                      {form.formState.errors.category && (
-                        <FormFeedback>
-                          {form.formState.errors.category.message}
-                        </FormFeedback>
-                      )}
-                    </Col>
-                    <Col className="mb-2" md="7" sm="12">
-                      <div className="rounded d-flex flex-column">
-                        <div
-                          className="d-flex flex-column align-items-center justify-content-center gap-2"
-                          style={{ position: "relative" }}
+                  <Row style={{ width: "100%" }}>
+                    <Col
+                      md="6"
+                      className="border mb-2 d-flex flex-column justify-content-center align-items-center gap-2"
+                    >
+                      <Col sm="12">
+                        <Label
+                          className="form-label"
+                          htmlFor="title"
+                          style={{ fontSize: "17px" }}
                         >
-                          <img
-                            className="rounded"
-                            src={featuredImg}
-                            style={{
-                              width: "300px",
-                              height: "220px",
-                              objectFit: "cover",
-                            }}
-                            alt="featured img"
-                          />
-                          {/* <p className="my-50">
-                              <a href="/" onClick={(e) => e.preventDefault()}>
-                                {`C:/fakepath/${imgPath}`}
-                              </a>
-                            </p> */}
-                          <div
-                            className="justify-content-center"
-                            style={{ position: "absolute", bottom: "0" }}
-                          >
-                            <div className="mb-0">
-                              <Controller
-                                id="image"
-                                name="image"
-                                control={form.control}
-                                render={({ field }) => (
-                                  <Input
-                                    type="file"
-                                    onChange={onChange}
-                                    accept=".jpg, .png, .gif"
-                                    placeholder="انتخاب تصویر"
-                                    {...field}
-                                  />
-                                )}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                          عنوان
+                        </Label>
+                        <Controller
+                          id="title"
+                          name="title"
+                          control={form.control}
+                          render={({ field }) => (
+                            <Input
+                              autoFocus
+                              type="text"
+                              placeholder="عنوان..."
+                              invalid={form.formState.errors.title && true}
+                              {...field}
+                            />
+                          )}
+                        />
+                        {form.formState.errors.title && (
+                          <FormFeedback style={{ fontSize: "16px" }}>
+                            {form.formState.errors.title.message}
+                          </FormFeedback>
+                        )}
+                      </Col>
+                      <Col sm="12" className="mb-2">
+                        <Label
+                          className="form-label"
+                          htmlFor="category"
+                          style={{ fontSize: "17px" }}
+                        >
+                          دسته بندی
+                        </Label>
+                        <Controller
+                          id="category"
+                          name="category"
+                          control={form.control}
+                          render={({ field }) => (
+                            <Input
+                              autoFocus
+                              type="select"
+                              invalid={form.formState.errors.category && true}
+                              {...field}
+                            >
+                              <option value="">انتخاب...</option>
+                              {categories.map((category) => (
+                                <option value={category.value}>
+                                  {category.label}
+                                </option>
+                              ))}
+                            </Input>
+                          )}
+                        />
+                        {form.formState.errors.category && (
+                          <FormFeedback style={{ fontSize: "16px" }}>
+                            {form.formState.errors.category.message}
+                          </FormFeedback>
+                        )}
+                      </Col>
+                    </Col>
+                    <Col className="mb-2" md="6" sm="12">
+                      <ImageUpload
+                        imgFile={featuredImg}
+                        setImgFile={setFeaturedImg}
+                      />
                     </Col>
                     <Col md="6" className="mb-2">
                       <Label
@@ -270,7 +235,7 @@ const BlogEdit = () => {
                         )}
                       />
                       {form.formState.errors.miniDescribe && (
-                        <FormFeedback>
+                        <FormFeedback style={{ fontSize: "16px" }}>
                           {form.formState.errors.miniDescribe.message}
                         </FormFeedback>
                       )}
@@ -298,7 +263,7 @@ const BlogEdit = () => {
                         )}
                       />
                       {form.formState.errors.keyword && (
-                        <FormFeedback>
+                        <FormFeedback style={{ fontSize: "16px" }}>
                           {form.formState.errors.keyword.message}
                         </FormFeedback>
                       )}
@@ -326,15 +291,21 @@ const BlogEdit = () => {
                           />
                         )}
                       />
+                      {form.formState.errors.describe && (
+                        <FormFeedback style={{ fontSize: "16px" }}>
+                          {form.formState.errors.describe.message}
+                        </FormFeedback>
+                      )}
                     </Col>
 
                     <Col className="mt-50 d-flex justify-content-end">
                       <Button
-                        color="primary"
+                        disabled={isSubmitting}
+                        color="success"
                         className="me-1"
                         style={{ fontSize: "17px" }}
                       >
-                        ایجاد
+                        ایجاد بلاگ
                       </Button>
                     </Col>
                   </Row>

@@ -203,9 +203,9 @@ const CourseEdit = () => {
         formData.append("Image", imgFile);
         await apiCall
           .post("/Course/SetNewImageForCourse", formData)
-          .then((respond) => {
+          .then(async (respond) => {
             if (respond.success)
-              apiCall(`Course/${id}`).then((res) => {
+              await apiCall(`/Course/${id}`).then((res) => {
                 if (res.success) setImgFile(data.imageAddress);
                 toast.remove(toaster);
               });

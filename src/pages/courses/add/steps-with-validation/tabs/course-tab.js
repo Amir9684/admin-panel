@@ -1,7 +1,7 @@
 import { Plus, Trash } from "react-feather";
 import { CoursePair } from "./course-pair";
 
-import { Row, Col, Button } from "reactstrap";
+import { Col, Button } from "reactstrap";
 
 export const CourseTab = ({
   tab,
