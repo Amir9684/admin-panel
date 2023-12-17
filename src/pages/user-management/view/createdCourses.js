@@ -107,7 +107,7 @@ const months = [
 const customStyles = {
   rows: {
     style: {
-      padding: "2px 0",
+      padding: "3px 0",
     },
   },
 };

@@ -15,13 +15,44 @@ import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
 import { selectThemeColors } from "@utils";
 
-const EditUserModal = ({ show, setShow, selectedUser }) => {
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
-    const statusOptions = [
-        { value: "active", label: "Active" },
-        { value: "inactive", label: "Inactive" },
-        { value: "suspended", label: "Suspended" },
-      ];
+const EditUserModal = ({ show, setShow, selectedUser }) => {
+  const MySwal = withReactContent(Swal);
+
+  const handleSuspendedClick = () => {
+    return MySwal.fire({
+      title: "اطمینان دارید !",
+      text: "آیا میخواهید اطلاعات جدید ثبت شوند ؟",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: " بله ",
+      cancelButtonText: "لغو",
+      customClass: {
+        confirmButton: "btn btn-warning",
+        cancelButton: "btn btn-outline-danger ms-1",
+      },
+      buttonsStyling: false,
+    }).then(function (result) {
+      if (result.value) {
+        MySwal.fire({
+          icon: "error",
+          title: "موفقیت آمیز نبود !",
+          text: "مشکلی پیش آمده لطفا مجدد تلاش کنید",
+          confirmButtonText: "تایید",
+          customClass: {
+            confirmButton: "btn btn-danger",
+          },
+        });
+      }
+    });
+  };
+
+  const statusOptions = [
+    { value: "active", label: "فعال" },
+    { value: "inactive", label: "غیر فعال" },
+  ];
 
   const {
     reset,
@@ -31,7 +62,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: selectedUser.email,
+      email: selectedUser.gmail,
       lastName: selectedUser.fName,
       firstName: selectedUser.lName,
     },
@@ -39,7 +70,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
 
   const handleReset = () => {
     reset({
-      username: selectedUser.email,
+      username: selectedUser.gmail,
       lastName: selectedUser.fName,
       firstName: selectedUser.lName,
     });
@@ -48,6 +79,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
   const onSubmit = (data) => {
     if (Object.values(data).every((field) => field.length > 0)) {
       setShow(false);
+      handleSuspendedClick();
     } else {
       for (const key in data) {
         if (data[key].length === 0) {
@@ -71,14 +103,14 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
       ></ModalHeader>
       <ModalBody className="px-sm-5 pt-50 pb-5">
         <div className="text-center mb-2">
-          <h1 className="mb-1">Edit User Information</h1>
-          <p>Updating user details will receive a privacy audit.</p>
+          <h1 className="mb-1">ویرایش اطلاعات کاربر</h1>
+          {/* <p></p> */}
         </div>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Row className="gy-1 pt-75">
             <Col md={6} xs={12}>
               <Label className="form-label" for="firstName">
-                First Name
+                نام
               </Label>
               <Controller
                 defaultValue=""
@@ -89,7 +121,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
                   <Input
                     {...field}
                     id="firstName"
-                    placeholder="John"
+                    placeholder="pending"
                     invalid={errors.firstName && true}
                   />
                 )}
@@ -97,7 +129,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
             </Col>
             <Col md={6} xs={12}>
               <Label className="form-label" for="lastName">
-                Last Name
+                نام خانوادگی
               </Label>
               <Controller
                 defaultValue=""
@@ -108,7 +140,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
                   <Input
                     {...field}
                     id="lastName"
-                    placeholder="Doe"
+                    placeholder="coding"
                     invalid={errors.lastName && true}
                   />
                 )}
@@ -116,18 +148,19 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
             </Col>
             <Col xs={12}>
               <Label className="form-label" for="username">
-                Username
+                پست الکترونیکی
               </Label>
               <Controller
-                defaultValue=""
+                defaultValue={selectedUser.gmail}
                 control={control}
                 id="username"
                 name="username"
                 render={({ field }) => (
                   <Input
+                    type="email"
                     {...field}
                     id="username"
-                    placeholder="john.doe.007"
+                    placeholder="pendingcoding@gmail.com"
                     invalid={errors.username && true}
                   />
                 )}
@@ -135,18 +168,18 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
             </Col>
             <Col md={6} xs={12}>
               <Label className="form-label" for="billing-email">
-                Billing Email
+                نام کاربری
               </Label>
               <Input
-                type="email"
+                type="content"
                 id="billing-email"
-                defaultValue={selectedUser.email}
-                placeholder="example@domain.com"
+                defaultValue={selectedUser.userName}
+                placeholder="PendingCoding"
               />
             </Col>
             <Col md={6} xs={12}>
               <Label className="form-label" for="status">
-                Status:
+                وضیعت
               </Label>
               <Select
                 id="status"
@@ -155,13 +188,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
                 classNamePrefix="select"
                 options={statusOptions}
                 theme={selectThemeColors}
-                defaultValue={
-                  statusOptions[
-                    statusOptions.findIndex(
-                      (i) => i.value === selectedUser.status
-                    )
-                  ]
-                }
+                defaultValue={statusOptions[0]}
               />
             </Col>
             {/* <Col md={6} xs={12}>
@@ -178,28 +205,24 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
           </Col> */}
             <Col md={6} xs={12}>
               <Label className="form-label" for="contact">
-                Contact
+                شماره موبایل
               </Label>
               <Input
                 id="contact"
                 defaultValue={selectedUser.phoneNumber}
-                placeholder="+1 609 933 4422"
+                placeholder="0911-782-8923"
               />
             </Col>
-            {/* <Col md={6} xs={12}>
-            <Label className="form-label" for="language">
-              language
-            </Label>
-            <Select
-              id="language"
-              isClearable={false}
-              className="react-select"
-              classNamePrefix="select"
-              options={languageOptions}
-              theme={selectThemeColors}
-              defaultValue={languageOptions[0]}
-            />
-          </Col> */}
+            <Col md={6} xs={12}>
+              <Label className="form-label" for="language">
+                بیوگرافی
+              </Label>
+              <Input
+                id="contact"
+                defaultValue={selectedUser.userAbout}
+                placeholder="سلام من ..."
+              />
+            </Col>
             {/* <Col md={6} xs={12}>
             <Label className="form-label" for="country">
               Country
@@ -243,9 +266,10 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
               </Label>
             </div>
           </Col> */}
+
             <Col xs={12} className="text-center mt-2 pt-50">
-              <Button type="submit" className="me-1" color="primary">
-                Submit
+              <Button type="submit" className="me-2" color="primary">
+                ثبت اطلاعات
               </Button>
               <Button
                 type="reset"
@@ -256,7 +280,7 @@ const EditUserModal = ({ show, setShow, selectedUser }) => {
                   setShow(false);
                 }}
               >
-                Discard
+                لغو عملیات
               </Button>
             </Col>
           </Row>

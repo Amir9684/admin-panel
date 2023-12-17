@@ -83,6 +83,7 @@ const Login = () => {
       toast.success("با موفقیت وارد شدید", { position: "top-center" });
       setItem("user", obj);
       setItem("token", loginApi.token);
+      setItem("id" ,loginApi.id  )
       setTimeout(() => {
         navigate("/");
       }, 700);

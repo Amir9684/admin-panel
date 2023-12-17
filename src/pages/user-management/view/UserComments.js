@@ -292,7 +292,15 @@ const UserComments = ({ selectedUser }) => {
     <>
       {commentsArr.length > 0 ? (
         <Card>
-          <CardHeader tag="h4">دوره های خریداری شده توسط کاربر</CardHeader>
+          <CardHeader tag="h4">
+            {" "}
+            کامنت های کاربر
+            <span>
+              {" "}
+              تعداد کل کامنت ها - {getPersianNumbers(commentsArr.length)}
+            </span>
+            <span></span>
+          </CardHeader>
           <div className="react-dataTable user-view-account-projects">
             <DataTable
               noHeader
@@ -309,7 +317,7 @@ const UserComments = ({ selectedUser }) => {
         <Alert color="danger">
           <h4 className="alert-heading"> کامنتی یافت نشد </h4>
           <div className="alert-body">
-                این کاربر تاکنون کامنتی ثبت نکرده است - 
+            این کاربر تاکنون کامنتی ثبت نکرده است -
             <Link to="/user-management"> لیست کاربران </Link>
           </div>
         </Alert>
