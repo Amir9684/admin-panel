@@ -47,25 +47,25 @@ const StatsCard = ({ cols }) => {
       title: getPersianNumbers(teachers.teachers?.length, false),
       subtitle: "اساتید محموعه",
       color: "light-info",
-      icon: <Users size={24} />,
+      icon: <Users size={40} />,
     },
     {
       title: getPersianNumbers(user?.totalCount, false),
       subtitle: "کاربران مجموعه",
       color: "light-success",
-      icon: <UserCheck size={24} />,
+      icon: <UserCheck size={40} />,
     },
     {
       title: getPersianNumbers(courses.totalCount, false),
       subtitle: "دوره‌ها",
       color: "light-primary",
-      icon: <BookOpen size={24} />,
+      icon: <BookOpen size={40} />,
     },
     {
       title: getPersianNumbers(news.totalCount, false),
       subtitle: "اخبار",
       color: "light-danger",
-      icon: <FileText size={24} />,
+      icon: <FileText size={40} />,
     },
   ];
 
@@ -78,14 +78,14 @@ const StatsCard = ({ cols }) => {
           key={index}
           {...cols}
           className={classnames({
-            [`mb-2 mb-${margin}-0`]: index !== data.length - 1,
+            [`mb-1 mb-${margin}-0`]: index !== data.length - 1,
           })}
         >
           <div className="d-flex align-items-center">
-            <Avatar color={item.color} icon={item.icon} className="me-2" />
+            <Avatar color={item.color} icon={item.icon} className="me-2 p-1" />
             <div className="my-auto">
-              <h4 className="fw-bolder mb-0">{item.title}</h4>
-              <CardText className="font-small-3 mb-0">{item.subtitle}</CardText>
+              <h4 className="fw-bolder mb-0 font-medium-2">{item.title}</h4>
+              <CardText className="font-medium-2 mb-0">{item.subtitle}</CardText>
             </div>
           </div>
         </Col>
@@ -96,7 +96,7 @@ const StatsCard = ({ cols }) => {
   return (
     <Card className="card-statistics">
       <CardHeader>
-        <CardTitle tag="h4">آکادمی سپهر</CardTitle>
+        <CardTitle className=" fw-bolder font-medium-5" tag="h1">آکادمی سپهر</CardTitle>
       </CardHeader>
       <CardBody className="statistics-body">
         <Row>{renderData()}</Row>

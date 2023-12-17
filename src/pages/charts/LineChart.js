@@ -97,7 +97,7 @@ const SimpleLineChart = ({ warning }) => {
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip content={CustomTooltip} />
-              <Line dataKey="pv" stroke={warning} strokeWidth={3} />
+              <Line dataKey="pv" stroke={warning} strokeWidth={4}/>
             </LineChart>
           </ResponsiveContainer>
         </div>

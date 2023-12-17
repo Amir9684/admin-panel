@@ -23,7 +23,7 @@ const Home = () => {
           <StatsCard cols={{ xl: "3", sm: "6" }} />
         </Col>
         <Col lg="8" md="6" xs="12">
-          <LineChart warning={colors.warning.main} />
+          <LineChart warning={colors.primary.main} />
         </Col>
         <Col lg="4" md="6" xs="12">
           <CardTransactions />
