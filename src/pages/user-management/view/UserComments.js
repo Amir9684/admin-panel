@@ -2,7 +2,13 @@
 import { Alert, Badge, Card, CardHeader, Progress } from "reactstrap";
 
 // ** Third Party Components
-import { CheckCircle, ChevronDown, XCircle } from "react-feather";
+import {
+  CheckCircle,
+  ChevronDown,
+  ThumbsDown,
+  ThumbsUp,
+  XCircle,
+} from "react-feather";
 import DataTable from "react-data-table-component";
 
 // ** Custom Components
@@ -19,8 +25,15 @@ import figmaLabel from "../../../assets/images/brands/figma-label.png";
 // ** Styles
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import { getPersianNumbers } from "../../../utility/get-persian-numbers";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+// import { getUserComments } from "../../../services/api/get-comments-by-id";
+import {
+  getCommentsByUserId,
+  selectAllUserComments,
+  useUserComments,
+} from "../../../redux/userCommentsById";
+import { useDispatch, useSelector } from "react-redux";
 
 // const projectsArr = [
 //   {
@@ -107,40 +120,58 @@ const months = [
 const customStyles = {
   rows: {
     style: {
-      padding: "1px 0",
+      // minHeight: '72px', // override the row height
+      padding: "7px 0",
     },
   },
-}
+  // headCells: {
+  //     style: {
+  //         paddingLeft: '8px', // override the cell padding for head cells
+  //         paddingRight: '8px',
+  //     },
+  // },
+  // cells: {
+  //     style: {
+  //         paddingLeft: '8px', // override the cell padding for data cells
+  //         paddingRight: '8px',
+  //     },
+  // },
+};
 
 export const columns = [
   {
     sortable: true,
     minWidth: "300px",
-    name: "دوره ها",
-    selector: (row) => row.courseName,
+    name: "عنوان و متن کامنت",
+    selector: (row) => row.commentTitle,
     cell: (row) => {
       return (
         <div className="d-flex justify-content-left align-items-center">
           <div className="avatar-wrapper">
-            <Avatar
-              className="me-1"
-              img={row.img}
-              alt={row.courseName}
-              imgWidth="32"
-            />
+            {row.img && row.img !== "Not-set" ? (
+              <Avatar className="me-1" img={row.img} alt="P C" imgWidth="32" />
+            ) : (
+              <Avatar
+                initials
+                color={"light-primary"}
+                className="me-1"
+                content="P C"
+                imgWidth="32"
+              />
+            )}
           </div>
           <div className="d-flex flex-column">
             <span
-              className="text-truncate fw-bolder"
+              className="text-truncate fw-bolder font-medium-1"
               style={{ whiteSpace: "normal" }}
             >
-              {row.courseName}
+              {row.commentTitle}
             </span>
             <small
-              className="text-muted font-small-1"
-              style={{ whiteSpace: "nowrap", marginTop: "3px" }}
+              className="text-muted font-small-4"
+              style={{ marginTop: "3px" }}
             >
-              {row.courseId}
+              {row.describe}
             </small>
           </div>
         </div>
@@ -148,14 +179,20 @@ export const columns = [
     },
   },
   {
-    name: "روز ثبت نام",
-    selector: (row) => row.currentReserverDate,
+    name: "نام دوره",
+    selector: (row) => row.courseTitle,
     cell: (row) => {
+      const [wrap, setWrap] = useState(false);
       return (
-        <div className="fw-bolder">
-          {`${getPersianNumbers(row.currentReserverDate?.[2], true)} ${
-            months[row.currentReserverDate?.[1] - 1]
-          } ${getPersianNumbers(row.currentReserverDate?.[0], true)}`}
+        <div className="d-flex flex-column">
+          <div className="fw-bolder">{row.courseTitle}</div>
+          <small
+            onClick={(e) => setWrap(!wrap)}
+            className="text-muted font-small-1"
+            style={{ marginTop: "5px", cursor: "pointer" }}
+          >
+            {wrap === true ? row.courseId : " ••• " + row.courseId.slice(0, 13)}
+          </small>
         </div>
       );
     },
@@ -182,56 +219,78 @@ export const columns = [
     },
   },
   {
-    name: "کد ثبت نام",
-    selector: (row) => row.reserveId,
+    name: "واکنش ها",
+    selector: (row) => row.likeCount,
     cell: (row) => {
-      const [wrap, setWrap] = useState(false);
       return (
-        <div
-          onClick={(e) => {
-            setWrap(!wrap);
-          }}
-          title={row.reserveId}
-          style={{
-            whiteSpace: "normal",
-            cursor: "pointer",
-          }}
-          className="font-small-2"
-        >
-          {wrap === false
-            ? " ••• " + row.reserveId.slice(2, 11)
-            : row.reserveId}
+        <div className="d-flex flex-column" style={{ gap: "8px" }}>
+          <div
+            className="d-flex bg-light-info gap-1 rounded-2"
+            style={{ padding: "3px 5px" }}
+          >
+            <div> {row.likeCount} </div>
+
+            <ThumbsUp size={15} />
+          </div>
+
+          <div
+            className="d-flex bg-light-danger gap-1 rounded-2"
+            style={{ padding: "3px 5px" }}
+          >
+            <div> {row.dislikeCount}</div>
+
+            <ThumbsDown style={{ transform: "rotateY(180deg)" }} size={15} />
+          </div>
         </div>
       );
     },
   },
 ];
-const UserProjectsList = ({ selectedUser }) => {
-  const data = selectedUser.coursesReseves;
+const UserComments = ({ selectedUser }) => {
+  const { id } = useParams();
 
-  const img = [
-    reactLabel,
-    vueLabel,
-    htmlLabel,
-    xdLabel,
-    sketchLabel,
-    figmaLabel,
-  ];
+  const dispatch = useDispatch();
 
-  const dataArr = data.map((data, index) => {
-    const currentReserverDate = new Date(data.reserverDate)
-      .toLocaleDateString("fa-IR-u-nu-latn")
-      .split("/");
+  useEffect(() => {
+    dispatch(getCommentsByUserId(id));
+  }, []);
+
+  const userComments = useSelector(selectAllUserComments);
+
+  const commentsArr = userComments.map((data) => {
     return {
       ...data,
-      img: img[index % 6],
-      currentReserverDate: currentReserverDate,
+      img: selectedUser.currentPictureAddress,
     };
   });
 
+  //   console.log(commentsArr);
+
+  //   const user = selectedUser.coursesReseves;
+
+  //   const img = [
+  //     reactLabel,
+  //     vueLabel,
+  //     htmlLabel,
+  //     xdLabel,
+  //     sketchLabel,
+  //     figmaLabel,
+  //   ];
+
+  //   const dataArr = user.map((data, index) => {
+  //     const currentReserverDate = new Date(data.reserverDate)
+  //       .toLocaleDateString("fa-IR-u-nu-latn")
+  //       .split("/");
+  //     return {
+  //       ...data,
+  //       img: img[index % 6],
+  //       currentReserverDate: currentReserverDate,
+  //     };
+  //   });
+
   return (
     <>
-      {dataArr.length > 0 ? (
+      {commentsArr.length > 0 ? (
         <Card>
           <CardHeader tag="h4">دوره های خریداری شده توسط کاربر</CardHeader>
           <div className="react-dataTable user-view-account-projects">
@@ -239,7 +298,7 @@ const UserProjectsList = ({ selectedUser }) => {
               noHeader
               responsive
               columns={columns}
-              data={dataArr}
+              data={commentsArr}
               className="react-dataTable"
               sortIcon={<ChevronDown size={10} />}
               customStyles={customStyles}
@@ -248,9 +307,9 @@ const UserProjectsList = ({ selectedUser }) => {
         </Card>
       ) : (
         <Alert color="danger">
-          <h4 className="alert-heading"> دوره ای یافت نشد </h4>
+          <h4 className="alert-heading"> کامنتی یافت نشد </h4>
           <div className="alert-body">
-            این کاربر دوره ای تهیه نکرده است -
+                این کاربر تاکنون کامنتی ثبت نکرده است - 
             <Link to="/user-management"> لیست کاربران </Link>
           </div>
         </Alert>
@@ -259,4 +318,4 @@ const UserProjectsList = ({ selectedUser }) => {
   );
 };
 
-export default UserProjectsList;
+export default UserComments;

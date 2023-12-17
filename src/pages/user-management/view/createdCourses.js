@@ -1,5 +1,5 @@
 // ** Reactstrap Imports
-import { Badge, Card, CardHeader, Progress } from "reactstrap";
+import { Alert, Badge, Card, CardHeader, Progress } from "reactstrap";
 
 // ** Third Party Components
 import { CheckCircle, ChevronDown, XCircle } from "react-feather";
@@ -20,6 +20,7 @@ import figmaLabel from "../../../assets/images/brands/figma-label.png";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import { getPersianNumbers } from "../../../utility/get-persian-numbers";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // const projectsArr = [
 //   {
@@ -102,6 +103,14 @@ const months = [
   "بهمن",
   "اسفند",
 ];
+
+const customStyles = {
+  rows: {
+    style: {
+      padding: "2px 0",
+    },
+  },
+};
 
 // const customStyles = {
 //     // rows: {
@@ -210,20 +219,32 @@ const CreatedCourses = ({ selectedUser }) => {
   });
 
   return (
-    <Card>
-      <CardHeader tag="h4">دوره های خریداری شده</CardHeader>
-      <div className="react-dataTable user-view-account-projects">
-        <DataTable
-          noHeader
-          responsive
-          columns={columns}
-          data={dataArr}
-          className="react-dataTable"
-          sortIcon={<ChevronDown size={10} />}
-          //   customStyles={customStyles}
-        />
-      </div>
-    </Card>
+    <>
+      {dataArr.length > 0 ? (
+        <Card>
+          <CardHeader tag="h4"> دوره های تشکیل شده توسط کاربر </CardHeader>
+          <div className="react-dataTable user-view-account-projects">
+            <DataTable
+              noHeader
+              responsive
+              columns={columns}
+              data={dataArr}
+              className="react-dataTable"
+              sortIcon={<ChevronDown size={10} />}
+              customStyles={customStyles}
+            />
+          </div>
+        </Card>
+      ) : (
+        <Alert color="danger">
+          <h4 className="alert-heading"> دوره ای یافت نشد </h4>
+          <div className="alert-body">
+            این کاربر دوره ای ایجاد نکرده است -
+            <Link to="/user-management"> لیست کاربران </Link>
+          </div>
+        </Alert>
+      )}
+    </>
   );
 };
 

@@ -74,7 +74,7 @@ const BillingTab = ({ selectedUser, setShow, teachers, userAccess }) => {
             <StatsHorizontal
               icon={<BookOpen size={33} />}
               color="success"
-              stats={currentTeacher?.courseCounts}
+              stats={currentTeacher?.courseCounts ? currentTeacher.courseCounts : "0"}
               statTitle="تعداد دوره های ایجاد شده توسط کاربر"
             />
           </Col>
@@ -82,7 +82,7 @@ const BillingTab = ({ selectedUser, setShow, teachers, userAccess }) => {
             <StatsHorizontal
               icon={<Bookmark size={33} />}
               color="warning"
-              stats={currentTeacher?.newsCount}
+              stats={currentTeacher?.newsCount ? currentTeacher.newsCount : "0"}
               statTitle="تعداد اخبار ایجاد شده توسط کاریر"
             />
           </Col>

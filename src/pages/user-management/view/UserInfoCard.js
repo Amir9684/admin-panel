@@ -79,15 +79,15 @@ const MySwal = withReactContent(Swal);
 
 const UserInfoCard = ({
   selectedUser,
-  teachers,
+  // teachers,
   show,
   setShow,
   // userAccess,
   setUserAccess,
 }) => {
-  const currentTeacher = teachers?.find(
-    (t) => t.fullName === selectedUser?.fName + "-" + selectedUser?.lName
-  );
+  // const currentTeacher = teachers?.find(
+  //   (t) => t.fullName === selectedUser?.fName + "-" + selectedUser?.lName
+  // );
 
   const checkRole = selectedUser.roles?.map((role) => role.id);
   const checkUserAccessByRole = () => {
@@ -181,33 +181,36 @@ const UserInfoCard = ({
 
   const handleSuspendedClick = () => {
     return MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert user!",
+      title: "اطمینان دارید !",
+      text: "آیا میخواهید کاربر را غیر فعال کنید ؟",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, Suspend user!",
+      confirmButtonText: " بله ",
+      cancelButtonText:"لغو",
       customClass: {
-        confirmButton: "btn btn-primary",
+        confirmButton: "btn btn-warning",
         cancelButton: "btn btn-outline-danger ms-1",
       },
       buttonsStyling: false,
     }).then(function (result) {
       if (result.value) {
         MySwal.fire({
-          icon: "success",
-          title: "Suspended!",
-          text: "User has been suspended.",
+          icon: "error",
+          title: "موفقیت آمیز نبود !",
+          text: "مشکلی پیش آمده لطفا مجدد تلاش کنید",
+          confirmButtonText:"تایید",
           customClass: {
-            confirmButton: "btn btn-success",
+            confirmButton: "btn btn-danger",
           },
         });
       } else if (result.dismiss === MySwal.DismissReason.cancel) {
         MySwal.fire({
-          title: "Cancelled",
-          text: "Cancelled Suspension :)",
-          icon: "error",
+          title: "عملیات لغو شد !",
+          // text: "Cancelled Suspension :)",
+          icon: "info",
+          confirmButtonText:"تایید",
           customClass: {
-            confirmButton: "btn btn-success",
+            confirmButton: "btn btn-info",
           },
         });
       }
@@ -307,7 +310,7 @@ const UserInfoCard = ({
                   </span>
                   <span style={{ direction: "rtl" }}>
                     {" "}
-                    {selectedUser.fName + " " + selectedUser.lName}
+                    {selectedUser.fName && selectedUser.lName? selectedUser.fName + " " + selectedUser.lName: "تکمیل نشده"}
                   </span>
                 </li>
                 <li className="mb-75">

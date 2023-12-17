@@ -25,6 +25,7 @@ import {
 import BillingPlanTab from "./BillingTab";
 import UserProjectsList from "./UserCourses";
 import CreatedCourses from "./createdCourses";
+import UserComments from "./UserComments";
 // import UserTimeline from './UserTimeline'
 // import Notifications from './Notifications'
 
@@ -95,6 +96,7 @@ const UserTabs = ({
         </TabPane>
         <TabPane tabId="3">
           {/* <BillingPlanTab selectedUser={selectedUser} /> */}
+          <UserComments selectedUser={selectedUser} />
         </TabPane>
         <TabPane tabId="4">
           {/* <Notifications /> */}
