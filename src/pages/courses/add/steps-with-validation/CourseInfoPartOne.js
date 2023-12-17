@@ -61,7 +61,7 @@ const CourseInfoPartOne = ({ stepper }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm({ defaultValues, resolver: zodResolver(formSchema) });
 
   const onSubmit = (values) => {
@@ -244,7 +244,7 @@ const CourseInfoPartOne = ({ stepper }) => {
             type="submit"
             color="primary"
             className="btn-prev"
-            disabled={isSubmitting || !isValid || !validDate}
+            disabled={isSubmitting  || !validDate}
           >
             <span
               className="align-middle d-sm-inline-block d-none"

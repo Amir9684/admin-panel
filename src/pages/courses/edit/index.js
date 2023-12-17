@@ -86,9 +86,10 @@ const CourseEdit = () => {
     [title, setTitle] = useState(""),
     [tabs, setTabs] = useState(null),
     [cost, setCost] = useState(0),
+    [sessionNumber, setSessionNumber] = useState(5),
     [imgFile, setImgFile] = useState(""),
     [dateRange, setDateRange] = useState(null),
-    [validDate, setValidDate] = useState(false),
+    [validDate, setValidDate] = useState(true),
     [avatar, setAvatar] = useState(null),
     [typeId, setTypeId] = useState(0),
     [termId, setTermId] = useState(0),
@@ -104,7 +105,7 @@ const CourseEdit = () => {
     defaultValues: {
       title: data?.title,
       capacity: course?.capacity,
-      sessionNumber: "10",
+      sessionNumber,
       cost: data?.cost,
     },
     resolver: zodResolver(formSchema),
@@ -123,6 +124,10 @@ const CourseEdit = () => {
           setTabs(JSON.parse(res.describe));
           setImgFile(res.imageAddress);
           setCost(res.cost);
+          const sNumbers = JSON.parse(res.describe).reduce((acc, current) => {
+            return (acc += current.videos.length);
+          }, 0);
+          setSessionNumber(sNumbers);
           let from = moment(res.startTime)
             .locale("fa")
             .format("YYYY-MM-DD")
@@ -207,7 +212,6 @@ const CourseEdit = () => {
             else toast.remove(toaster);
           });
       }
-      toast.remove(toaster);
       const obj = {
         Id: id,
         Title: values.title,
@@ -249,8 +253,8 @@ const CourseEdit = () => {
       const formData = new FormData();
       for (const item in obj) formData.append(item, obj[item]);
       await apiCall.put("/Course", formData).then((res) => {
-        if (res.success) toast.success("بلاگ بروزرسانی شد");
         toast.remove(toaster);
+        if (res.success) toast.success("بلاگ بروزرسانی شد");
       });
     } catch (error) {
       console.log(error);
@@ -449,6 +453,7 @@ const CourseEdit = () => {
                             id="sessionNumber"
                             name="sessionNumber"
                             control={control}
+                            defaultValue={sessionNumber}
                             render={({ field }) => (
                               <Input
                                 invalid={errors.sessionNumber && true}

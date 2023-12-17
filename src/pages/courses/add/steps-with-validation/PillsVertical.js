@@ -21,7 +21,11 @@ const PillsVertical = ({ tab, index, handleClick, onChangeTitle }) => {
         >
           {getPersianNumbers(index + 1)}
         </Button>
-        <Input value={tab.name} onChange={handleTitleChange} />
+        <Input
+          style={{ fontSize: "17px" }}
+          value={tab.name}
+          onChange={handleTitleChange}
+        />
       </NavItem>
     </Nav>
   );

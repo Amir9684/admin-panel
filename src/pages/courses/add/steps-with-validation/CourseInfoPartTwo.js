@@ -4,6 +4,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import {toast} from "react-hot-toast"
 
 // ** Third Party Components
 import { ArrowLeft, Slack } from "react-feather";
@@ -16,24 +17,6 @@ import {
 } from "../../../../services/common/storage.services";
 import { apiCall } from "../../../../services/interceptor/api-call";
 import TabPillsContainer from "./tabs/TabPillsContainer";
-
-// const formSchema = z.object({
-//   level: z.number({
-//     required_error: "یک سطح را انتخاب کتید",
-//   }),
-//   courseType: z.number({
-//     required_error: "نوع دوره را انتخاب کتید",
-//   }),
-//   courseStatus: z.number({ required_error: "وضعیت دوره را مشخص کتید" }),
-//   classRoom: z.number({
-//     required_error: "یک کلاس برای دوره انتخاب کتید",
-//   }),
-//   courseTerm: z.number({ required_error: "ترم برگذاری دوره را انتخاب کتید" }),
-//   describe: z
-//     .string()
-//     .min(30, `توضیحات دوره باید حداقل ${getPersianNumbers(30)} باشد`)
-//     .max(130, `توضیحات دوره باید حداکثر ${getPersianNumbers(130)} باشد`),
-// });
 
 const defaultValues = {
   CourseLvlId: "",
@@ -90,6 +73,7 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
   } = useForm({ defaultValues, resolver: zodResolver(formSchema) });
 
   const onSubmit = async (values) => {
+    let toaster 
     const createCourseDatas = getItem("create_course");
     const formData = new FormData();
     for (const item in createCourseDatas.courseDatas)
@@ -115,6 +99,7 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
     formData.append("TumbImageAddress", "");
     formData.append("ImageAddress", "");
     formData.append("Describe", JSON.stringify(tabs));
+    toaster = toast.loading("در حال ایجاد دوره")
     await apiCall.post("/Course", formData).then(async (res) => {
       if (res.success) {
         const body = [{ techId: createCourseDatas.id }];
@@ -122,9 +107,10 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
           .post(`/Course/AddCourseTechnology?courseId=${res.id}`, body)
           .then((response) => {
             if (response.success) {
-              removeItem("create_course");
+              toast.remove(toaster)
               toast.success("دوره با موفقیت ایجاد شد");
               navigate("/course-management");
+              removeItem("create_course");
             } else toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
           });
       } else toast.error("مشکلی پیش آمده بعداٌ تلاش کنید");
@@ -154,6 +140,7 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
               control={control}
               render={({ field }) => (
                 <Input
+                  style={{ fontSize: "16px" }}
                   autoFocus
                   type="select"
                   invalid={errors.CourseLvlId && true}
@@ -161,7 +148,11 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
                 >
                   <option value="">انتخاب...</option>
                   {options.courseLevel?.map((level) => (
-                    <option key={level.id} value={level.id}>
+                    <option
+                      key={level.id}
+                      value={level.id}
+                      style={{ fontSize: "17px" }}
+                    >
                       {level.levelName}
                     </option>
                   ))}
@@ -188,6 +179,7 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
               control={control}
               render={({ field }) => (
                 <Input
+                  style={{ fontSize: "16px" }}
                   autoFocus
                   type="select"
                   invalid={errors.CourseTypeId && true}
@@ -195,7 +187,11 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
                 >
                   <option value="">انتخاب...</option>
                   {options.courseType?.map((type) => (
-                    <option key={type.id} value={type.id}>
+                    <option
+                      key={type.id}
+                      value={type.id}
+                      style={{ fontSize: "17px" }}
+                    >
                       {type.typeName}
                     </option>
                   ))}
@@ -258,6 +254,7 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
               control={control}
               render={({ field }) => (
                 <Input
+                  style={{ fontSize: "16px" }}
                   autoFocus
                   type="select"
                   invalid={errors.TremId && true}
@@ -265,7 +262,11 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
                 >
                   <option value="">انتخاب...</option>
                   {options.courseTerm?.map((term) => (
-                    <option key={term.id} value={term.id}>
+                    <option
+                      key={term.id}
+                      style={{ fontSize: "17px" }}
+                      value={term.id}
+                    >
                       {term.termName}
                     </option>
                   ))}
@@ -292,6 +293,7 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
               control={control}
               render={({ field }) => (
                 <Input
+                  style={{ fontSize: "16px" }}
                   autoFocus
                   type="select"
                   invalid={errors.ClassId && true}
@@ -299,7 +301,11 @@ const CourseInfoPartTwo = ({ stepper, options }) => {
                 >
                   <option value="">انتخاب...</option>
                   {options.classRoom?.map((classRoom) => (
-                    <option key={classRoom.id} value={classRoom.id}>
+                    <option
+                      key={classRoom.id}
+                      value={classRoom.id}
+                      style={{ fontSize: "17px" }}
+                    >
                       {classRoom.classRoomName}
                     </option>
                   ))}

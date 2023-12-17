@@ -232,71 +232,87 @@ const BlogEdit = () => {
                 <FormProvider {...form}>
                   <Form
                     className="mt-2 d-flex d-flex-row"
+                    style={{ width: "100%" }}
                     onSubmit={form.handleSubmit(onSubmit)}
                   >
-                    <Row>
-                      <Col lg="3" md="5" className="mb-2 align-self-end">
-                        <Label
-                          className="form-label"
-                          htmlFor="title"
-                          style={{ fontSize: "17px" }}
-                        >
-                          عنوان
-                        </Label>
-                        <Controller
-                          id="title"
-                          name="title"
-                          defaultValue={title}
-                          control={form.control}
-                          render={({ field }) => (
-                            <Input
-                              autoFocus
-                              type="text"
-                              placeholder="عنوان..."
-                              invalid={form.formState.errors.title && true}
-                              {...field}
-                            />
+                    <Row style={{ width: "100%" }}>
+                      <Col
+                        md="6"
+                        className="border mb-2 d-flex flex-column justify-content-center align-items-center gap-2"
+                      >
+                        <Col sm="12">
+                          <Label
+                            className="form-label"
+                            htmlFor="title"
+                            style={{ fontSize: "17px" }}
+                          >
+                            عنوان
+                          </Label>
+                          <Controller
+                            id="title"
+                            name="title"
+                            defaultValue={title}
+                            control={form.control}
+                            render={({ field }) => (
+                              <Input
+                                autoFocus
+                                type="text"
+                                placeholder="عنوان..."
+                                invalid={form.formState.errors.title && true}
+                                {...field}
+                              />
+                            )}
+                          />
+                          {form.formState.errors.title && (
+                            <FormFeedback>
+                              {form.formState.errors.title.message}
+                            </FormFeedback>
                           )}
-                        />
-                      </Col>
-                      <Col lg="2" md="5" className="mb-2 align-self-end">
-                        <Label
-                          className="form-label"
-                          htmlFor="category"
-                          style={{ fontSize: "17px" }}
-                        >
-                          دسته بندی
-                        </Label>
-                        <Controller
-                          id="category"
-                          name="category"
-                          control={form.control}
-                          defaultValue={String(data?.newsCatregoryId)}
-                          render={({ field }) => (
-                            <Input
-                              autoFocus
-                              type="select"
-                              invalid={form.formState.errors.category && true}
-                              {...field}
-                            >
-                              <option value={data.newsCatregoryId}>
-                                {data.newsCatregoryName}
-                              </option>
-                              {categories
-                                .filter(
-                                  (category) =>
-                                    category.value !== data.newsCatregoryId
-                                )
-                                .map((category) => (
-                                  <option value={category.value}>
-                                    {category.label}
-                                  </option>
-                                ))}
-                            </Input>
+                        </Col>
+                        <Col sm="12" className="mb-2">
+                          <Label
+                            className="form-label"
+                            htmlFor="category"
+                            style={{ fontSize: "17px" }}
+                          >
+                            دسته بندی
+                          </Label>
+                          <Controller
+                            id="category"
+                            name="category"
+                            control={form.control}
+                            defaultValue={String(data?.newsCatregoryId)}
+                            render={({ field }) => (
+                              <Input
+                                autoFocus
+                                type="select"
+                                invalid={form.formState.errors.category && true}
+                                {...field}
+                              >
+                                <option value={data.newsCatregoryId}>
+                                  {data.newsCatregoryName}
+                                </option>
+                                {categories
+                                  .filter(
+                                    (category) =>
+                                      category.value !== data.newsCatregoryId
+                                  )
+                                  .map((category) => (
+                                    <option value={category.value}>
+                                      {category.label}
+                                    </option>
+                                  ))}
+                              </Input>
+                            )}
+                          />
+                          {form.formState.errors.category && (
+                            <FormFeedback>
+                              {form.formState.errors.category.message}
+                            </FormFeedback>
                           )}
-                        />
+                        </Col>
                       </Col>
-                      <Col className="mb-2" md="7" sm="12">
+                      <Col className="mb-2" md="6" sm="12">
                         <ImageUpload setImgFile={setImgFile} />
                       </Col>
                       <Col md="6" className="mb-2">
@@ -324,6 +340,11 @@ const BlogEdit = () => {
                             />
                           )}
                         />
+                        {form.formState.errors.miniDescribe && (
+                          <FormFeedback>
+                            {form.formState.errors.miniDescribe.message}
+                          </FormFeedback>
+                        )}
                       </Col>
                       <Col md="6" className="mb-2">
                         <Label
@@ -348,6 +369,11 @@ const BlogEdit = () => {
                             />
                           )}
                         />
+                        {form.formState.errors.keyword && (
+                          <FormFeedback>
+                            {form.formState.errors.keyword.message}
+                          </FormFeedback>
+                        )}
                       </Col>
                       <Col sm="12" className="mb-2">
                         <Label
@@ -373,6 +399,11 @@ const BlogEdit = () => {
                             />
                           )}
                         />
+                        {form.formState.errors.describe && (
+                          <FormFeedback>
+                            {form.formState.errors.describe.message}
+                          </FormFeedback>
+                        )}
                       </Col>
 
                       <Col className="mt-50 d-flex justify-content-between">

@@ -161,6 +161,11 @@ const BlogEdit = () => {
                           />
                         )}
                       />
+                      {form.formState.errors.title && (
+                        <FormFeedback>
+                          {form.formState.errors.title.message}
+                        </FormFeedback>
+                      )}
                     </Col>
                     <Col lg="2" md="5" className="mb-2 align-self-end">
                       <Label
@@ -191,6 +196,11 @@ const BlogEdit = () => {
                           </Input>
                         )}
                       />
+                      {form.formState.errors.category && (
+                        <FormFeedback>
+                          {form.formState.errors.category.message}
+                        </FormFeedback>
+                      )}
                     </Col>
                     <Col className="mb-2" md="7" sm="12">
                       <div className="rounded d-flex flex-column">
@@ -259,6 +269,11 @@ const BlogEdit = () => {
                           />
                         )}
                       />
+                      {form.formState.errors.miniDescribe && (
+                        <FormFeedback>
+                          {form.formState.errors.miniDescribe.message}
+                        </FormFeedback>
+                      )}
                     </Col>
                     <Col md="6" className="mb-2">
                       <Label
@@ -282,6 +297,11 @@ const BlogEdit = () => {
                           />
                         )}
                       />
+                      {form.formState.errors.keyword && (
+                        <FormFeedback>
+                          {form.formState.errors.keyword.message}
+                        </FormFeedback>
+                      )}
                     </Col>
                     <Col sm="12" className="mb-2">
                       <Label

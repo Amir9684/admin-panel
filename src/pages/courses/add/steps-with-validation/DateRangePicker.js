@@ -3,6 +3,7 @@ import moment from "jalali-moment";
 
 const DateRangePicker = ({ setValidDate = true, setDateRange }) => {
   const onChange = (e) => {
+    setValidDate(false)
     let from = moment(e.from).locale("fa").format("YYYY-MM-DD").split("-");
     let to = moment(e.to).locale("fa").format("YYYY-MM-DD").split("-");
     from = {

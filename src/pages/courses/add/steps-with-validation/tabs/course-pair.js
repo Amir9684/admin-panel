@@ -24,6 +24,7 @@ export const CoursePair = ({
           عنوان
         </Label>
         <Input
+          style={{ fontSize: "16px" }}
           placeholder="عنوان..."
           value={pair.title}
           onChange={onChangePairTitle}
@@ -34,6 +35,7 @@ export const CoursePair = ({
           لینک ویدیو
         </Label>
         <Input
+          style={{ fontSize: "16px" }}
           placeholder="لینک..."
           value={pair.videoLink}
           onChange={onChangePairVideoLink}

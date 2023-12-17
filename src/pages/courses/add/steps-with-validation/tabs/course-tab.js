@@ -24,7 +24,7 @@ export const CourseTab = ({
         {tab.isActive &&
           tab.videos.map((pair, index) => (
             <CoursePair
-              key={index}
+              key={pair.title}
               pair={pair}
               onDeletePair={() => onDeletePair(tab, index)}
               onChangePairTitle={(e) =>

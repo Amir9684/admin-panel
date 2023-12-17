@@ -42,10 +42,4 @@ export default [
     icon: <FileText size={20} />,
     navLink: "/news",
   },
-  {
-    id: "technologies",
-    title: "مدیریت درس‌ها",
-    icon: <Book size={20} />,
-    navLink: "/techs-management",
-  },
 ];

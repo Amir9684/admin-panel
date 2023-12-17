@@ -15,7 +15,7 @@ const MySwal = withReactContent(Swal);
 
 const courseAdapter = createEntityAdapter({
   selectId: (course) => course.courseId,
-  sortComparer: (a, b) => new Date(b.lastUpdate) - new Date(a.lastUpdate),
+  sortComparer: (a, b) => new Date(a.lastUpdate) - new Date(b.lastUpdate),
 });
 
 export const getAllCourses = createAsyncThunk(
