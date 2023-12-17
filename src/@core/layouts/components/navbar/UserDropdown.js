@@ -29,21 +29,21 @@ import defaultAvatar from "@src/assets/images/portrait/small/avatar-s-11.jpg";
 import { getItem } from "../../../../services/common/storage.services";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserById, selectAllUsers } from "../../../../redux/users";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 const UserDropdown = () => {
   const dispatch = useDispatch();
   const store = useSelector(selectAllUsers);
   const user = store[0];
 
-  const userId = getItem("id");
+  const userId = useMemo(() => getItem("id") , []);
 
   // ** Get suer on mount
   useEffect(() => {
     dispatch(getUserById(userId));
   }, []);
 
-  console.log(userId)
+  // console.log(userId);
 
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
@@ -55,11 +55,11 @@ const UserDropdown = () => {
       >
         <div className="user-nav d-sm-flex d-none">
           <span className="user-name fw-bold">
-            {/* {user?.fName === user?.lName
+            {user?.fName === user?.lName
               ? user?.fName
-              : user?.fName + "" + user?.lName} */}
-              {/* {user?.fName} */}
-              PendingCoding
+              : user?.fName + "" + user?.lName}
+            {/* {user?.fName} */}
+            {/* PendingCoding */}
           </span>
           <span className="user-status">Admin</span>
         </div>
@@ -71,11 +71,11 @@ const UserDropdown = () => {
         />
       </DropdownToggle>
       <DropdownMenu end>
-        <DropdownItem tag={Link} to="/" onClick={(e) => e.preventDefault()}>
+        <DropdownItem tag={Link} to="/account-settings">
           <User size={14} className="me-75 fw-bolder" />
           <span className="align-middle fw-bolder">پروفایل</span>
         </DropdownItem>
-{/*         
+        {/*         
         <DropdownItem tag={Link} to="/" onClick={(e) => e.preventDefault()}>
           <Mail size={14} className="me-75" />
           <span className="align-middle">Inbox</span>
@@ -108,7 +108,7 @@ const UserDropdown = () => {
 
         <DropdownItem tag={Link} to="/login">
           <Power size={14} className="me-75 fw-bolder" />
-          <span className="align-middle fw-bolder">خروج  </span>
+          <span className="align-middle fw-bolder">خروج </span>
         </DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>

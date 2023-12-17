@@ -14,7 +14,8 @@ import { isObjEmpty } from "@utils";
 import Dashboard from "./home";
 import CourseRoutes from "./course";
 import AuthRoutes from "./auth";
-import UserRoutes from './user'
+import UserRoutes from './user';
+import AccountSettingRoutes from "./accountSetting"
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -29,7 +30,7 @@ const TemplateTitle = "%s - Vuexy React Admin Template";
 const DefaultRoute = "/home";
 
 // ** Merge Routes
-const Routes = [...Dashboard, ...CourseRoutes, ...AuthRoutes , ...UserRoutes];
+const Routes = [...Dashboard, ...CourseRoutes, ...AuthRoutes , ...UserRoutes , ...AccountSettingRoutes ];
 
 const getRouteMeta = (route) => {
   if (isObjEmpty(route.element.props)) {
