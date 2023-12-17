@@ -2,7 +2,7 @@
 import { Fragment, useState } from "react";
 
 // ** Reactstrap Imports
-import { Row, Col, Card, CardBody, CardTitle, CardHeader } from "reactstrap";
+import { Row, Col, Card, CardBody, CardTitle, CardHeader, Badge } from "reactstrap";
 
 // // ** Third Party Components
 // import Select from 'react-select'
@@ -118,7 +118,7 @@ const BillingAddress = ({ selectedUser }) => {
                   تایید دو مرحله ای :
                 </Col>
                 <Col tag="dd" sm="8" className="mb-1">
-                  {selectedUser.twoStepAuth === false ? "خیر" : "بله"}
+                  {selectedUser.twoStepAuth === false ? <Badge color="light-danger"> غیر فعال </Badge> : <Badge color="light-success"> فعال</Badge>}
                 </Col>
 
                 <Col tag="dt" sm="4" className="fw-bolder mb-1">
@@ -130,7 +130,7 @@ const BillingAddress = ({ selectedUser }) => {
                     : "تکمیل نشده ! "}
                 </Col>
 
-                <Col tag="dt" sm="4" className="fw-bolder mb-1">
+                {/* <Col tag="dt" sm="4" className="fw-bolder mb-1">
                   پروفایل لینکدین :
                 </Col>
                 <Col tag="dd" sm="8" className="mb-1">
@@ -149,16 +149,16 @@ const BillingAddress = ({ selectedUser }) => {
                   ) : (
                     "تکمیل نشده ! "
                   )}
-                </Col>
+                </Col> */}
               </Row>
             </Col>
             <Col xl="5" xs="12">
               <Row tag="dl" className="mb-0">
                 <Col tag="dt" sm="4" className="fw-bolder mb-1">
-                  تلگرام :
+                  لوکیشن :
                 </Col>
                 <Col tag="dd" sm="8" className="mb-1">
-                  {selectedUser.telegramLink ? (
+                  {/* {selectedUser.telegramLink ? (
                     <>
                       {" "}
                       <Link to={selectedUser.telegramLink}>
@@ -173,7 +173,11 @@ const BillingAddress = ({ selectedUser }) => {
                     </>
                   ) : (
                     "تکمیل نشده ! "
-                  )}
+                  )} */}
+                  <Link to="https://maps.app.goo.gl/eRpNApDWCFaN5YdF7" target="blank">
+                    {" "}
+                    https://maps.app.goo.gl/eRpNApDWCFaN5YdF7{" "}
+                  </Link>
                 </Col>
 
                 <Col tag="dt" sm="4" className="fw-bolder mb-1">

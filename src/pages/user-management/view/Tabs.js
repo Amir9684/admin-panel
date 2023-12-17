@@ -15,6 +15,7 @@ import {
   Code,
   Command,
   Globe,
+  MessageCircle,
 } from "react-feather";
 
 // ** User Components
@@ -22,13 +23,21 @@ import {
 // import SecurityTab from './SecurityTab'
 // import Connections from './Connections'
 import BillingPlanTab from "./BillingTab";
+import UserProjectsList from "./UserCourses";
+import CreatedCourses from "./createdCourses";
 // import UserTimeline from './UserTimeline'
 // import Notifications from './Notifications'
-// import UserProjectsList from './UserProjectsList'
 
 // import CourseColumn from "./list";
 
-const UserTabs = ({ active, toggleTab, selectedUser, setShow, userAccess }) => {
+const UserTabs = ({
+  active,
+  toggleTab,
+  selectedUser,
+  setShow,
+  userAccess,
+  teachers,
+}) => {
   return (
     <Fragment>
       <Nav pills className="mb-2">
@@ -44,20 +53,22 @@ const UserTabs = ({ active, toggleTab, selectedUser, setShow, userAccess }) => {
             <span className="fw-bold">دوره های ثبت نامی</span>
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink active={active === "3"} onClick={() => toggleTab("3")}>
+            <MessageCircle className="font-medium-3 me-50" />
+            <span className="fw-bold"> کامنت ها </span>
+          </NavLink>
+        </NavItem>
+
         {userAccess === true && (
           <NavItem>
-            <NavLink active={active === "3"} onClick={() => toggleTab("3")}>
-              <Folder className="font-medium-3 me-50" />
-              <span className="fw-bold">دوره های ایجاد شده</span>
+            <NavLink active={active === "4"} onClick={() => toggleTab("4")}>
+              <Bookmark className="font-medium-3 me-50" />
+              <span className="fw-bold"> دوره های ایجاد شد </span>
             </NavLink>
           </NavItem>
         )}
-        {/* <NavItem>
-          <NavLink active={active === "4"} onClick={() => toggleTab("4")}>
-            <Bell className="font-medium-3 me-50" />
-            <span className="fw-bold">Notifications</span>
-          </NavLink>
-        </NavItem> */}
+
         {/* <NavItem>
           <NavLink active={active === "5"} onClick={() => toggleTab("5")}>
             <Link className="font-medium-3 me-50" />
@@ -68,19 +79,27 @@ const UserTabs = ({ active, toggleTab, selectedUser, setShow, userAccess }) => {
 
       <TabContent activeTab={active}>
         <TabPane tabId="1">
-          <BillingPlanTab selectedUser={selectedUser} setShow={setShow} />
-          {/* <UserProjectsList />
-          <UserTimeline />
+          <BillingPlanTab
+            selectedUser={selectedUser}
+            setShow={setShow}
+            teachers={teachers}
+            userAccess={userAccess}
+          />
+          {/* <UserTimeline />
           <InvoiceList /> */}
         </TabPane>
         <TabPane tabId="2">
+          <UserProjectsList selectedUser={selectedUser} />
           {/* <SecurityTab /> */}
           {/* <CourseColumn selectedUser={selectedUser} /> */}
         </TabPane>
         <TabPane tabId="3">
           {/* <BillingPlanTab selectedUser={selectedUser} /> */}
         </TabPane>
-        <TabPane tabId="4">{/* <Notifications /> */}</TabPane>
+        <TabPane tabId="4">
+          {/* <Notifications /> */}
+          <CreatedCourses selectedUser={selectedUser} />
+        </TabPane>
         <TabPane tabId="5">{/* <Connections /> */}</TabPane>
       </TabContent>
     </Fragment>

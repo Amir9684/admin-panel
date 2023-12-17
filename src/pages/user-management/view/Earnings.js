@@ -32,9 +32,9 @@ const Earnings = ({ success, selectedUser, setShow }) => {
     colors: [success, "#988eff"],
     grid: {
       padding: {
-        right: -20,
-        bottom: -8,
-        left: -20,
+        right: -18,
+        bottom: -6,
+        left: -18,
       },
     },
     plotOptions: {
@@ -109,7 +109,7 @@ const Earnings = ({ success, selectedUser, setShow }) => {
   };
 
   return (
-    <Card className="earnings-card" style={{ padding: "7px 0" }}>
+    <Card className="earnings-card">
       <CardBody>
         <Row>
           <Col xs="6">
@@ -118,7 +118,7 @@ const Earnings = ({ success, selectedUser, setShow }) => {
               {" "}
               مقدار تکمیل شده مشخصات حساب کاربری{" "}
             </div>
-            <div className="font-small-2" style={{ margin: "0 0 12px" }}>
+            <div className="font-small-2" style={{ margin: "0 0 12px" ,whiteSpace:"nowrap" }}>
               برای تکمیل پروفایل اقدام کنید
             </div>
             <CardText className="text-muted font-small-2">

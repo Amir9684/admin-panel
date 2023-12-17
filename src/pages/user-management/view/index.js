@@ -72,6 +72,7 @@ const UserView = () => {
             show={show}
             setShow={setShow}
             userAccess={userAccess}
+            teachers={teachers.teachers.length > 0 && teachers.teachers}
           />
         </Col>
       </Row>

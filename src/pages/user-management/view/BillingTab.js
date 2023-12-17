@@ -9,39 +9,85 @@ import Earnings from "./Earnings";
 import { Col, Row } from "reactstrap";
 import { ThemeColors } from "../../../utility/context/ThemeColors";
 import StatsVertical from "./StatsVertical";
-import { Globe } from "react-feather";
+import {
+  BookOpen,
+  Bookmark,
+  Folder,
+  Globe,
+  Linkedin,
+  Send,
+} from "react-feather";
 import fullLogo from "../../../assets/images/PC-logo/pcLogo.svg";
+import StatsHorizontal from "./StatsHorizontal";
 
-const BillingTab = ({ selectedUser, setShow }) => {
+const BillingTab = ({ selectedUser, setShow, teachers, userAccess }) => {
   const { colors } = useContext(ThemeColors);
+
+  const currentTeacher = teachers?.find(
+    (t) => t.fullName === selectedUser?.fName + "-" + selectedUser?.lName
+  );
 
   return (
     <Fragment>
       {/* <BillingCurrentPlan />
       <PaymentMethods /> */}
       <BillingAddress selectedUser={selectedUser} />
-      <Row>
-        <Col lg="6" md="9" xs="12">
+      <Row xl="2" lg="1" md="1" sm="1" xs="1">
+        <Col
+        //  lg="6" md="10" xs="10"
+        >
           <Earnings
             success={colors.primary.main}
             selectedUser={selectedUser}
             setShow={setShow}
           />
         </Col>
-        {/* <Col lg="3" md="4" xs="7">
-          <StatsVertical
-            className="bg-white"
-            selectedUser={selectedUser}
-            icon={<Globe size={21} />}
-            color="info"
-            stats="36.9k"
-            statTitle="Views"
-          />
+        <Col>
+          {" "}
+          <Row xl="2">
+            <Col>
+              {" "}
+              <StatsVertical
+                link={selectedUser.linkdinProfile}
+                icon={<Linkedin size={40} />}
+                color="danger"
+                stats="LinkedIn"
+                statTitle="پروفایل لینکدین"
+              />
+            </Col>
+            <Col>
+              {" "}
+              <StatsVertical
+                link={selectedUser.telegramLink}
+                icon={<Send size={40} />}
+                color="info"
+                stats="Telegram"
+                statTitle="پروفایل تلگرام"
+              />
+            </Col>
+          </Row>
         </Col>
-        <Col lg="3" md="4" xs="7" className="bg-white">
-          <img src={fullLogo} style={{width:"90%" , height:"90%"}}/>
-        </Col> */}
       </Row>
+      {userAccess === true && (
+        <Row lg="2" md="1" sm="2" xs="1">
+          <Col>
+            <StatsHorizontal
+              icon={<BookOpen size={33} />}
+              color="success"
+              stats={currentTeacher?.courseCounts}
+              statTitle="تعداد دوره های ایجاد شده توسط کاربر"
+            />
+          </Col>
+          <Col>
+            <StatsHorizontal
+              icon={<Bookmark size={33} />}
+              color="warning"
+              stats={currentTeacher?.newsCount}
+              statTitle="تعداد اخبار ایجاد شده توسط کاریر"
+            />
+          </Col>
+        </Row>
+      )}
     </Fragment>
   );
 };

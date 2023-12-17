@@ -20,7 +20,7 @@ import {
 // ** Third Party Components
 import Swal from "sweetalert2";
 // import Select from "react-select";
-import { BookOpen, Folder } from "react-feather";
+import { BookOpen, Folder, User } from "react-feather";
 // import { useForm, Controller } from "react-hook-form";
 import withReactContent from "sweetalert2-react-content";
 
@@ -82,7 +82,7 @@ const UserInfoCard = ({
   teachers,
   show,
   setShow,
-  userAccess,
+  // userAccess,
   setUserAccess,
 }) => {
   const currentTeacher = teachers?.find(
@@ -234,7 +234,7 @@ const UserInfoCard = ({
 
   return (
     <Fragment>
-      <Card >
+      <Card>
         <CardBody>
           <div className="user-avatar-section" style={{ margin: "-20px 0 0" }}>
             <div className="d-flex align-items-center flex-column">
@@ -262,32 +262,37 @@ const UserInfoCard = ({
             </div>
           </div>
 
-          {userAccess === true && (
-            <div className="d-flex justify-content-center gap-2 my-2 pt-75">
-              <div className="d-flex align-items-start me-2">
-                <Badge color="light-info" className="rounded p-75">
-                  <Folder className="font-medium-2" />
-                </Badge>
-                <div className="ms-75">
-                  <h4 className="mb-0">
-                    {getPersianNumbers(currentTeacher?.courseCounts)}
-                  </h4>
-                  <small>دوره ها</small>
-                </div>
+          {/* {userAccess === true && ()} */}
+          <div className="d-flex justify-content-center my-2">
+            {/* <div className="d-flex align-items-start me-2" style={{padding:"10px" ,border:"1px solid red"}}>
+              <Badge color="light-info" className="rounded p-75">
+                <Folder className="font-medium-2 w-50 h-50" />
+              </Badge>
+              <div className="ms-75">
+                <h4 className="mb-0">
+                  {getPersianNumbers(currentTeacher?.courseCounts)}
+                </h4>
+                <small>دوره ها</small>
               </div>
-              <div className="d-flex align-items-start">
-                <Badge color="light-info" className="rounded p-75">
-                  <BookOpen className="font-medium-2" />
+            </div>
+            <div className="avatar-content">
+                <Badge color="light-info" className="rounded p-2">
+                <User size={30} />
                 </Badge>
+                
                 <div className="ms-75">
                   <h4 className="mb-0">
                     {getPersianNumbers(currentTeacher?.newsCount)}
                   </h4>
                   <small>تعداد اخبار</small>
                 </div>
-              </div>
+                
+              </div> */}
+
+            <div className="bg-light-info rounded-3" style={{padding:"9px"}}>
+              <User size={34} />
             </div>
-          )}
+          </div>
 
           <h4 className="fw-bolder border-bottom pb-50 mb-1"> مشخصات </h4>
           <div className="info-container">
