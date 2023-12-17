@@ -5,8 +5,8 @@ import courses from "./courses";
 import users from "./users";
 import news from "./news";
 import teachers from "./teachers";
-import technology from "./techs";
 import comments from "./commnets";
+import userComments from "./userCommentsById";
 
 const rootReducer = {
   navbar,
@@ -15,8 +15,8 @@ const rootReducer = {
   users,
   news,
   teachers,
-  technology,
   comments,
+  userComments,
 };
 
 export default rootReducer;

@@ -16,6 +16,8 @@ import CourseRoutes from "./course";
 import AuthRoutes from "./auth";
 import BlogRoute from "./blogs";
 import TechRoutes from "./techs";
+import UserRoutes from "./user";
+import AccountSettingRoutes from "./accountSetting";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -36,6 +38,8 @@ const Routes = [
   ...AuthRoutes,
   ...BlogRoute,
   ...TechRoutes,
+  ...UserRoutes,
+  ...AccountSettingRoutes,
 ];
 
 const getRouteMeta = (route) => {

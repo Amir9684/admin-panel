@@ -26,8 +26,25 @@ import {
 
 // ** Default Avatar Image
 import defaultAvatar from "@src/assets/images/portrait/small/avatar-s-11.jpg";
+import { getItem } from "../../../../services/common/storage.services";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserById, selectAllUsers } from "../../../../redux/users";
+import { useEffect, useMemo } from "react";
 
 const UserDropdown = () => {
+  const dispatch = useDispatch();
+  const store = useSelector(selectAllUsers);
+  const user = store[0];
+
+  const userId = useMemo(() => getItem("id") , []);
+
+  // ** Get suer on mount
+  useEffect(() => {
+    dispatch(getUserById(userId));
+  }, []);
+
+  // console.log(userId);
+
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
       <DropdownToggle
@@ -37,21 +54,28 @@ const UserDropdown = () => {
         onClick={(e) => e.preventDefault()}
       >
         <div className="user-nav d-sm-flex d-none">
-          <span className="user-name fw-bold">John Doe</span>
+          <span className="user-name fw-bold">
+            {user?.fName === user?.lName
+              ? user?.fName
+              : user?.fName + "" + user?.lName}
+            {/* {user?.fName} */}
+            {/* PendingCoding */}
+          </span>
           <span className="user-status">Admin</span>
         </div>
         <Avatar
-          img={defaultAvatar}
+          img={user?.currentPictureAddress}
           imgHeight="40"
           imgWidth="40"
           status="online"
         />
       </DropdownToggle>
       <DropdownMenu end>
-        <DropdownItem tag={Link} to="/" onClick={(e) => e.preventDefault()}>
-          <User size={14} className="me-75" />
-          <span className="align-middle">Profile</span>
+        <DropdownItem tag={Link} to="/account-settings">
+          <User size={14} className="me-75 fw-bolder" />
+          <span className="align-middle fw-bolder">پروفایل</span>
         </DropdownItem>
+        {/*         
         <DropdownItem tag={Link} to="/" onClick={(e) => e.preventDefault()}>
           <Mail size={14} className="me-75" />
           <span className="align-middle">Inbox</span>
@@ -80,10 +104,11 @@ const UserDropdown = () => {
         <DropdownItem tag={Link} to="/" onClick={(e) => e.preventDefault()}>
           <HelpCircle size={14} className="me-75" />
           <span className="align-middle">FAQ</span>
-        </DropdownItem>
+        </DropdownItem> */}
+
         <DropdownItem tag={Link} to="/login">
-          <Power size={14} className="me-75" />
-          <span className="align-middle">Logout</span>
+          <Power size={14} className="me-75 fw-bolder" />
+          <span className="align-middle fw-bolder">خروج </span>
         </DropdownItem>
       </DropdownMenu>
     </UncontrolledDropdown>

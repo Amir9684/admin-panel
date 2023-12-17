@@ -6,6 +6,7 @@ import {
   MessageCircle,
   Table,
   Circle,
+  User,
 } from "react-feather";
 
 export default [
@@ -41,5 +42,11 @@ export default [
     title: "مدیریت بلاگ‌ها",
     icon: <FileText size={20} />,
     navLink: "/news",
+  },
+  {
+    id: "userManagement",
+    title: "مدیریت کاربران",
+    icon: <User size={20} />,
+    navLink: "/user-management",
   },
 ];
