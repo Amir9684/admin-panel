@@ -1,0 +1,1 @@
+import{ak as o}from"./index.872b1012.js";const n=async r=>{try{return await o.post("/Sign/Login",r)}catch{return!1}},a=async r=>{try{return await o.post("/Sign/ForgetPassword",r)}catch{return!1}},e="_error_ijry4_1",c={error:e};export{a as f,n as l,c as s};

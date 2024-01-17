@@ -1,0 +1,1 @@
+function t(u,e){return e||(u=n(u)),(""+u).replace(/[0-9]/g,function(r){return"\u0660\u0661\u0662\u0663\u0664\u0665\u0666\u0667\u0668\u0669".slice(+r,+r+1)})}function n(u=1e5){return u.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}export{t as g};

@@ -77,7 +77,7 @@ const Home = () => {
         </Col>
         <Col lg="3" sm="6">
           <StatsHorizontal
-            color="warning"
+            color="primary"
             statTitle="تعداد بلاگ‌ها"
             icon={<FileText size={20} />}
             renderStats={
@@ -88,7 +88,7 @@ const Home = () => {
           />
         </Col>
         <Col lg="8" md="6" xs="12">
-          <LineChart warning={colors.warning.main} />
+          <LineChart warning={colors.primary.main} />
         </Col>
         <Col lg="4" md="6" xs="12">
           <CardTransactions />
